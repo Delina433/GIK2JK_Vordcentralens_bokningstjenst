@@ -1,4 +1,4 @@
-namespace Vardcentral.Domain;
+namespace Vardcentral.Domain.Enums;
 
 public class Bokning
 {
