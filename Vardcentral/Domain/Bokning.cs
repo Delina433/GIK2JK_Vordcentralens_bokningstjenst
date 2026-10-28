@@ -1,4 +1,6 @@
-namespace Vardcentral.Domain.Enums;
+using Vardcentral.Domain.Enums;
+
+namespace Vardcentral.Domain;
 
 public class Bokning
 {
@@ -13,7 +15,7 @@ public class Bokning
 
     public bool ÄrAktiv
     {
-        get {return Status == BokningsStatus.Bokas || Status == BokningsStatus.Ombokad; }
+        get {return Status == BokningsStatus.Bokad || Status == BokningsStatus.Ombokad; }
     }
 
     public Bokning(int id, Patient patient, Vårdpersonal personal, Besöktyp typ, Tidslucka tid, BokningsPrioritet prioritet)

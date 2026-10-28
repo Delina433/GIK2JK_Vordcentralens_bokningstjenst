@@ -3,7 +3,7 @@ namespace Vardcentral.Domain;
 public class Rum
 {         // Id och Namn bara läsas,inte ändras
         public int Id { get; }
-        public string Name { get; }
+        public string Namn { get; }
         // konstruktorn körs när ett nytt rum skapas
         public Rum(int id, string namn)
         {
@@ -13,6 +13,6 @@ public class Rum
         }
 
     }
-}
+
 
     

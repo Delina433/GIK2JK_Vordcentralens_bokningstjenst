@@ -1,3 +1,5 @@
+using Vardcentral.Domain.Enums;
+
 namespace Vardcentral.Domain;
 
 public class Besöktyp
