@@ -8,6 +8,5 @@ public interface IPrioritetStrategi
             // ex går akut patienter före vanliga
             int Jämför(Bokning a, Bokning b);
         }
-    }
-
+    
 
