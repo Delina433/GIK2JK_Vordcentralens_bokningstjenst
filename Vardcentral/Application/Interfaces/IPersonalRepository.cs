@@ -5,9 +5,9 @@ namespace Vardcentral.Application.Interfaces;
 public interface IPersonalRepository
 {
    // Hämtar en vårdpersonal med id
-      Vårdpersonal? Hämta(int id);
+      Personal? Hämta(string id); // Returerar null om id inte finns 
       // Hämtar all vårdpersonal
-      List<Vårdpersonal> HämtaAlla();
+      List<Personal> HämtaAlla();
   }
   
-}
+
