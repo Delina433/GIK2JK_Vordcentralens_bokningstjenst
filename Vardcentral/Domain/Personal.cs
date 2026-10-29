@@ -1,41 +1,37 @@
-namespace Vardcentral.Domain;
+namespace Vardcentral.Domain.Enums;
    public class Personal
    {
-       public string Namn { get; set; }
-       public string Efternamn { get; set; }
-       public string Personaltyp { get; set; }
-
-public class Personal
-{
+       public string Namn { get; }
+       public string Efternamn { get; }
+       public Personaltyp Typ { get; }
+       public Vårdcentral Vårdcentral { get; }
+       public Rum Rum { get; }
+       private string _id = "";
     
-}
-       private string _id;
+
+
        public string Id
 
        {
            get { return _id; }
-           set
+           private set
            {
 
                if (value == null || value.Length != 6 || !value.All(char.IsDigit))
-
-
-               {
                    throw new ArgumentException("Id måste vara 6 siffror");
-               }
 
                _id = value;
            }
        }
 
-       public Personal(string namn, string efternamn, string personaltyp, string id)
+       public Personal(string namn, string efternamn, Personaltyp typ, string id, Vårdcentral vårdcentral, Rum rum)
        {
            Namn = namn;
            Efternamn = efternamn;
-           Personaltyp = personaltyp;
+           Typ = typ;
            Id = id;
-
+           Vårdcentral = vårdcentral;
+           Rum = rum;
        }
+    }
 
-       List<Personal> vardpersonal = new List<Personal>();
-   }

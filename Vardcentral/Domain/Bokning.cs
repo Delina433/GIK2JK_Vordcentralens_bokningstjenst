@@ -16,7 +16,7 @@ public class Bokning
     public BokningsStatus Status {get; private set;}
     
      
-   // E n bokning är aktiv om en är bokad eller ombokad (inte avkodad eller inställd)
+   // En bokning är aktiv om en är bokad eller ombokad (inte avkodad eller inställd)
     public bool ÄrAktiv
     {
         get {return Status == BokningsStatus.Bokad || Status == BokningsStatus.Ombokad; }

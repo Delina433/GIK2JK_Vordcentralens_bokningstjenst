@@ -1,26 +1,36 @@
 namespace Vardcentral.Domain;
 
-public class Pacient
+public class Patient
 {
     public string Namn { get; set; }
     public string Efternamn { get; set; }
-    private string _Personnummer;
+    private string _Personnummer = "";
 
     public string Personnummer
+    {
+        get { return _Personnummer; }
 
-    { get { return _Personnummer; } set { 
-        if (value == null || value.Length != 10 || !value.All(char.IsDigit))
-            { throw new ArgumentException("Personnummer måste vara 10 siffror");
-                _Personnummer = value;
-            }
-        } }
+        private set 
+        { 
+            if (value == null || value.Length != 10 || !value.All(char.IsDigit))
+            { throw new ArgumentException("Personnummer måste vara 10 siffror"); }
 
-    public Pacient(string namn, string efternamn, string personnummer)
-{
-    Namn = namn;
-    Efternamn = efternamn;
-    Personnummer = personnummer;
+            _Personnummer = value;// sparas bara om kontrollen gick igenom
+        }
+    }
 
-}
-}
- List<Pacient> Pacienter = new List<Pacient>();
+        public Patient(string namn, string efternamn, string personnummer)
+        {
+            Namn = namn;
+            Efternamn = efternamn;
+            Personnummer = personnummer;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
