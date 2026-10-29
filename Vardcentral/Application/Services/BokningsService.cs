@@ -1,7 +1,7 @@
 using Vardcentral.Domain;
-using Vardcentral.Application.Interfaces;
 
-namespace Vardcentral.Application;
+
+namespace Vardcentral.Application.Interfaces;
 
 public class BokningsService : IBokningsService
 {
