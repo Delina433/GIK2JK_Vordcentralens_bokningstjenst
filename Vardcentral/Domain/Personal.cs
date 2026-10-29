@@ -1,6 +1,6 @@
 namespace Vardcentral.Domain;
 
-public class Vårdpersonal
+public class Personal
 {
     
 }
