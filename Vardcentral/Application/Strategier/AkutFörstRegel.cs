@@ -4,7 +4,7 @@ using Vardcentral.Application.Interfaces;
 
 namespace Vardcentral.Application.Strategier;
 //Akuta bokningar först, sedan tidigaste tiden (strategy mönster)
-public class AkutFörstRegel : IPrioritetRegel
+public class AkutFörstRegel : IPrioritetStrategi
 
 {
     public int Jämför(Bokning a, Bokning b)

@@ -2,7 +2,7 @@
 using Vardcentral.Application.Interfaces;
 namespace Vardcentral.Application.Strategier;
 // sorterar bokningar efter tid .Tidigaste tiden kommer först.
-public class TidsordningsRegeln : IPrioritetRegel
+public class TidsordningsRegeln : IPrioritetStrategi
 
 {
     public int Jämför(Bokning a, Bokning b)
