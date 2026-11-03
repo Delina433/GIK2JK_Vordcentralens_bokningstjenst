@@ -1,11 +1,167 @@
 using Vardcentral.Domain;
+using Vardcentral.Domain.Enums;
+using Vardcentral.Application.Interfaces;
 
 
-namespace Vardcentral.Application.Interfaces;
+namespace Vardcentral.Application.Services;
 
 public class BokningsService : IBokningsService
 {
+    private readonly IBokningsRepository _bokningar;
+    private readonly IPersonalRepository _personal;
+    private readonly ITidsSökare _tidsSökare;
+    private readonly INotifieringsService _notiser;
+    private readonly IPrioritetStrategi _prioritet;
+
+    private int _nästaId = 1; // räknare för bokningar
+
+    public BokningsService(IBokningsRepository bokningar, IPersonalRepository personal,  ITidsSökare tidsSökare, INotifieringsService notiser, IPrioritetStrategi prioritet)
+    {
+        _bokningar = bokningar;
+        _personal = personal;
+        _tidsSökare = tidsSökare;
+        _notiser = notiser;
+        _prioritet = prioritet;
+    }
+
+    public Bokning? SkapaBokning(Besöktyp typ, Personal personal, Tidslucka tid, Patient patient)
+    {
+        return Skapa (typ, personal, tid, patient, BokningsPrioritet.Normal);
+    }
+
+    public Bokning? BokaAkut(Besöktyp akutTyp, Vårdcentral vårdcentral, DateTime dag, Patient patient)
+    {
+        LedigaTider?  bästaTid = null;
+
+        foreach (LedigaTider lediga in _tidsSökare.SökLedigaTider(akutTyp, vårdcentral, dag))
+        {
+            if (lediga.Tider.Count == 0) continue;
+
+            if (bästaTid == null || lediga.Tider[0].Start < bästaTid.Tider[0].Start)
+            {
+                bästaTid = lediga;
+            }
+                
+        }
+        
+        if (bästaTid == null)
+        {
+            return null; //ingen ledig tid denna dag
+        }
+            
+        return Skapa(akutTyp, bästaTid.Personal, bästaTid.Tider[0], patient, BokningsPrioritet.Akut);
+    }
+
+    public bool Avboka(int bokningsId)
+    {
+        Bokning? bokning = _bokningar.HämtaBokning(bokningsId);
+
+        if (bokning == null || !bokning.ÄrAktiv)
+        {
+            return false;
+        }
+        
+
+        bokning.Avboka();
+        _bokningar.UppdaderaBokning(bokning);
+        _notiser.Publicera(bokning, "Din bokning är avbokad.");
 
 
+        return true;
+    }
 
+    public bool StällIn(int bokningId)
+    {
+        Bokning? bokning =_bokningar.HämtaBokning(bokningId);
+        
+        if (bokning == null || !bokning.ÄrAktiv)
+        {
+            return false;
+        }
+        
+
+        foreach (var person in _personal.HämtaAlla())
+        {
+            if (person.Typ !=bokning.Personal.Typ) continue;
+
+            if (person.Vårdcentral.Id != bokning.Personal.Vårdcentral.Id)continue;
+
+            if (_tidsSökare.ÄrTillgänglig(person, person.Rum, bokning.Tid))
+            {
+                bokning.Omboka(person,bokning.Tid);
+                _bokningar.UppdaderaBokning(bokning);
+                _notiser.Publicera(bokning, 
+                $"Din tid är flyttad till {person.Namn} {person.Efternamn} på {person.Vårdcentral.Namn}, samma tid.");
+                
+                return true;
+            }
+        }
+
+        //Ingen ersätare hittades
+        bokning.StällIn();
+
+        _bokningar.UppdaderaBokning(bokning);
+        _notiser.Publicera(bokning, "Din tid är tyvärr inställd. Boka gärna en ny tid.");
+        
+        return true;
+    }
+
+    public List<Bokning> HämtaBokningar(string personnummer)
+    {
+        List<Bokning> resultat = new List<Bokning>();
+
+        foreach (var bokning in _bokningar.HämtaAllaBokningar())
+        {
+            if (bokning.Patient.Personnummer ==  personnummer)
+            {
+                resultat.Add(bokning);
+            }
+            
+        }
+        return resultat;
+    }
+   
+   public List<LedigaTider>SökLedigaTider(Besöktyp typ, Vårdcentral vårdcentral, DateTime dag)
+    {
+        return _tidsSökare.SökLedigaTider(typ, vårdcentral, dag);
+    }
+
+    public List<Bokning> HämtaAktivaSorterade()
+    {
+        List<Bokning> aktiva = new List<Bokning>();
+
+        foreach (var bokning in _bokningar.HämtaAllaBokningar())
+        {
+            if (bokning.ÄrAktiv)
+            {
+                aktiva.Add(bokning);
+            }
+            
+        }
+        aktiva.Sort(_prioritet.Jämför);
+        return aktiva;
+    }
+
+    private Bokning? Skapa(Besöktyp typ, Personal personal, Tidslucka tid, Patient patient, BokningsPrioritet prioritet)
+    {  
+        if (personal.Typ != typ.KrävdPersonal)
+        {
+            return null; // t.ex sjuksköterska kan inte bokas hos en läkare
+        }
+ 
+
+        if (!_tidsSökare.ÄrTillgänglig(personal, personal.Rum, tid))
+        {
+            return null; //dubbelbokning hindras
+        }
+        
+
+        Bokning bokning = new Bokning(_nästaId, patient, personal, typ, tid, prioritet);
+
+        _nästaId++;
+        _bokningar.LäggTillBokning(bokning);
+        _notiser.Publicera(bokning, $"Bokad:{typ.Namn} hos{personal.Namn} {personal.Efternamn}, {tid.Start:yyyy-MM.dd HH:mm}, {personal.Rum:Namn}.");
+        
+        return bokning;
+    }
 }
