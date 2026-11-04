@@ -1,4 +1,4 @@
-using Vardcentral.Domain
+using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
 
 namespace Vardcentral.Infrastructure;
