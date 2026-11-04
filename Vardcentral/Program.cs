@@ -40,7 +40,7 @@ var patienter = new List<Patient>{
  };
 
 // koppla ihop klasserna//
-var bokningRepo = new MinnesBokningRepository();
+var bokningRepo = new MinneBokningRepository();
 var tidsSökare = new TidsSökare(personalRepo, bokningRepo);
 var notiser = new NotifieringsService();
 notiser.Prenumerera(new KonsolNotifierare());// observer 

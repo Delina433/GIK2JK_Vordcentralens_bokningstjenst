@@ -5,7 +5,7 @@ using Vardcentral.Domain.Enums;
 namespace Vardcentral.Infrastructure;
 
 
-public class MinneBokningRepository : IPersonalRepository
+public class MinneBokningRepository : IBokningsRepository
 {
     private readonly List<Personal> _personal = new();
 

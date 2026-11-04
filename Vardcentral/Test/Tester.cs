@@ -214,13 +214,13 @@ public static class Tester
      FysioNorr = new Personal("Fysio", "Norr", Personaltyp.Fysioterapeut, "100003", Norr, rum2);
      LäkareSöder = new Personal("Läkare", "Söder", Personaltyp.Läkare, "200001", Söder, rum3);
 
-     var personal = new InMemoryPersonalRepository();
+     var personal = new MinnePersonalRepository();
      personal.LäggTill(LäkareNorr);
      personal.LäggTill(SjukskNorr);
      personal.LäggTill(FysioNorr);
      personal.LäggTill(LäkareSöder);
 
-     var bokningar = new InMemoryBokningRepository();
+     var bokningar = new MinneBokningRepository();
      var tidsSökare = new TidsSökare(personal, bokningar);
 
      Service = new BokningsService(bokningar, personal, tidsSökare,

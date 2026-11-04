@@ -2,7 +2,7 @@ using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
 using Vardcentral.Domain.Enums;
 
-namespace Vardcentral.Application;
+namespace Vardcentral.Application.Services;
 
 public class TidsSökare : ITidsSökare
 {
