@@ -3,8 +3,9 @@ using Vardcentral.Domain.Enums;
 using Vardcentral.Application.Interfaces;
 using Vardcentral.Application.Services;
 using Vardcentral.Application.Strategier;
-using Vardcentral.Application.Infrastructure;
+using Vardcentral.Infrastructure;
 using Vardcentral.Application;
+
 // två vårdcentraler
 var norr = new Vårdcentral(1, "Vårdcentralen Norr");
 var söder = new Vårdcentral(2, "Vårdcentralen Söder");
@@ -15,7 +16,7 @@ var rumNorr2 = new Rum(2, "Rum 2(Norr)");
 var rumSöder1 = new Rum(3, "Rum 1 ( Söder)");
 var rumSöder2 = new Rum(4, "Rum 2 ( Söder)");
 
-var personalRepo = new MinnesPersonalRepository();
+var personalRepo = new MinnePersonalRepository();
 personalRepo.LäggTill(new Personal("Ahmad", "Anna", Personaltyp.Läkare, "100001", norr, rumNorr1));
 personalRepo.LäggTill(new Personal("Sarra", "Diana", Personaltyp.sjuksköterska, "100002", norr, rumNorr2));
 personalRepo.LäggTill(new Personal("Adem", "Rena", Personaltyp.Fysioterapeut, "100003", norr, rumNorr2));
