@@ -1,6 +1,9 @@
 using Vardcentral.Domain.Enums;
 
 namespace Vardcentral.Domain;
+// En bokning: vem, hos vem, vilken typ, när, i vilket rum och status.
+// private set: Status, Tid, Personal och Rum ändras bara via metoderna nedan
+
 
 public class Bokning
 {
@@ -9,7 +12,7 @@ public class Bokning
     public Besöktyp Typ {get;}
     public BokningsPrioritet Prioritet {get;}
 
-    //Dessa kan ändras vi ombokning men bara inifron klassen 
+    //Dessa kan ändras vi ombokning men bara inifrån klassen 
     public Personal Personal {get; private set;}
     public Tidslucka Tid {get; private set;} 
     public Rum Rum {get; private set;}
@@ -29,7 +32,7 @@ public class Bokning
         Personal = personal;
         Typ = typ;
         Tid = tid;
-        Rum = personal.Rum;
+        Rum = personal.Rum; // besöket sker i personalens rum
         Prioritet = prioritet;
         Status = BokningsStatus.Bokad;
     }
