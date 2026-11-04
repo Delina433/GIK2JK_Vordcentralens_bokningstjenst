@@ -8,6 +8,10 @@ using Vardcentral.Infrastructure;
 
 namespace Vardcentral.Tests;
 
+// Enkla tester med Debug.Assert. Körs från menyn (val 7) i Debug-läge (F5).
+// Om ett test misslyckas stannar programmet på den raden.
+
+
 public static class Tester
 {
   public static void KörAlla() 
@@ -28,6 +32,7 @@ public static class Tester
  Console.WriteLine("Alla tester klara.");
 
  }
+   //  Domänklasser 
  private static void Överlappar_KrockOchMöts()
  {
     var dag = new DateTime(2026, 11, 2);
@@ -75,7 +80,7 @@ public static class Tester
 
   
  }
-
+//Bokning
  private static void Boka_SammaPersonalSammaTid_Hindras()
  {
 
@@ -90,7 +95,7 @@ public static class Tester
 
  private static void Boka_SammaRumSammaTid_Hindras()
  {
-
+// Sjuksköterskan och fysioterapeuten på Norr delar rum.
  var s = new Testsystem();
  var sjuksk = s.Service.SkapaBokning(s.Sjuksköterskebesök, s.SjukskNorr, s.Tid(9, 0, 20), s.Patient1);
  var fysioKrock = s.Service.SkapaBokning(s.Fysioterapi, s.FysioNorr, s.Tid(9, 10, 45), s.Patient2);
@@ -108,7 +113,7 @@ public static class Tester
     var bokning = s.Service.SkapaBokning(s.Fysioterapi, s.LäkareNorr, s.Tid(10, 0, 45), s.Patient1);
     Debug.Assert(bokning == null, "Fysioterapi kan inte bokas hos en läkare");
  }
- 
+ //Sökning
  private static void Sök_BokadTidVisasInte()
  {
     var s = new Testsystem();
@@ -127,7 +132,7 @@ public static class Tester
     var lördag = s.Dag.AddDays(5); // Dag är en måndag
     Debug.Assert(s.Service.SökLedigaTider(s.Läkarbesök, s.Norr, lördag).Count == 0, "Stängt på helger");
  }
- 
+ // ------Avboka och ställa in
  private static void Avboka_GörTidenLedigIgen()
  {
     var s = new Testsystem();
@@ -167,6 +172,8 @@ public static class Tester
 
     Debug.Assert(bokning.Status == BokningsStatus.Inställd);
   }
+
+   // ---------- Sortering (Strategy)
  private static void Sortering_AkutFörst()
  {
     var s = new Testsystem();
@@ -183,7 +190,7 @@ public static class Tester
  Debug.Assert(tidsordning.Jämför(normal, akut) < 0, "Med tidsordning kommer 08:00 först");
 
  }
-
+// ----------Hjälpklass: bygger ett nytt litet system för varje test
  private class Testsystem
  {
    public Vårdcentral Norr = new Vårdcentral(1, "Norr");
@@ -224,7 +231,9 @@ public static class Tester
 
      var bokningar = new MinneBokningRepository();
      var tidsSökare = new TidsSökare(personal, bokningar);
-
+     
+     // Ingen KonsolNotifierare här, så testerna inte skriver ut notiser.
+     
      Service = new BokningsService(bokningar, personal, tidsSökare,
      new NotifieringsService(), new AkutFörstRegel());
 
@@ -233,6 +242,7 @@ public static class Tester
      Dag = Dag.AddDays(1);
 
    }
+   // Skapar en tid på testdagen, t.ex. Tid(9, 0, 10) = 09:00–09:10.
    
    public Tidslucka Tid(int timme, int minut, int längdMinut)
    {
