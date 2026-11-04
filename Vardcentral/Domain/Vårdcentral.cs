@@ -1,5 +1,5 @@
 namespace Vardcentral.Domain;
-
+// En vårdcentral.
 public class Vårdcentral 
 {
     public int Id {get;}
