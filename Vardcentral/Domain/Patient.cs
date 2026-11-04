@@ -1,11 +1,15 @@
 namespace Vardcentral.Domain;
+// En patient
+// Personnumret kontrolleras innan det sparas.
+// Antagande (kundmötet): inloggning sköts utanför systemet, så vi sparar inget lösenord.
 
 public class Patient
 {
+   // Bara get: kan läsas men inte ändras utifrån . 
     public string Namn { get; set; }
     public string Efternamn { get; set; }
     private string _Personnummer = "";
-
+   // private set: bara Patient själv kan sätta personnumret, och då kontrolleras det
     public string Personnummer
     {
         get { return _Personnummer; }
