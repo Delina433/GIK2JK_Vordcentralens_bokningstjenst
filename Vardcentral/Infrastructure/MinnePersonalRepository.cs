@@ -1,10 +1,10 @@
 using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
 
-namespace Vardcentral.Application.Infrastructure;
+namespace Vardcentral.Infrastructure;
 
 
-public class InMemoryPersonalRepository : IPersonalRepository
+public class MinnePersonalRepository : IPersonalRepository
 {
     private readonly List<Personal> _personal = new List<Personal>();
 

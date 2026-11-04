@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using Vardcentral.Domain;
 using Vardcentral.Domain.Enums;
+using Vardcentral.Application.Interfaces;
 using Vardcentral.Application.Services;
 using Vardcentral.Application.Strategier;
 using Vardcentral.Infrastructure;
+
 namespace Vardcentral.Tests;
 
 public static class Tester
