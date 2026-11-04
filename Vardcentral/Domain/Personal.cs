@@ -3,14 +3,14 @@ using Vardcentral.Domain.Enums;
 namespace Vardcentral.Domain;
    public class Personal
    {
+     private string _id = "";
+
        public string Namn { get; }
        public string Efternamn { get; }
-       public Personaltyp Typ { get; }
+       public  Personaltyp Typ { get; }
        public Vårdcentral Vårdcentral { get; }
        public Rum Rum { get; }
-       private string _id = "";
-    
-
+      
 
        public string Id
 
@@ -36,4 +36,3 @@ namespace Vardcentral.Domain;
            Rum = rum;
        }
     }
-
