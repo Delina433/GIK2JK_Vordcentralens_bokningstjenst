@@ -1,5 +1,5 @@
 namespace Vardcentral.Domain;
-
+// Resultatet av en sökning: en person i personalen och personens lediga tider.
 public class LedigaTider
 {
     public Personal Personal {get;}
