@@ -17,7 +17,7 @@ public class NotifieringsService : INotifieringsService
         
     }
 
-    public void AvPrenumerera(IBokningsObserver observer)
+    public void Avprenumerera(IBokningsObserver observer)
     {
         _observatörer.Remove(observer);
     }
