@@ -1,9 +1,12 @@
 using Vardcentral.Domain.Enums;
 
 namespace Vardcentral.Domain;
+// En person i vårdpersonalen (läkare, sjuksköterska eller fysioterapeut).
+// Vårdcentral och Rum: personalen jobbar på en vårdcentral och i ett rum.
+// Kundmötet: flera i personalen kan dela samma rum.
+
    public class Personal
    {
-     private string _id = "";
 
        public string Namn { get; }
        public string Efternamn { get; }
@@ -12,8 +15,9 @@ namespace Vardcentral.Domain;
        public Rum Rum { get; }
       
 
+       private string _id = "";
+      // Id kontrolleras innan det sparas
        public string Id
-
        {
            get { return _id; }
            private set
