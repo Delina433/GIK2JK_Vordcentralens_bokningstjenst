@@ -1,4 +1,6 @@
-namespace Vardcentral.Domain.Enums;
+using Vardcentral.Domain.Enums;
+
+namespace Vardcentral.Domain;
    public class Personal
    {
        public string Namn { get; }
