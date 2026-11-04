@@ -3,9 +3,8 @@ using Vardcentral.Domain.Enums;
 using Vardcentral.Application.Interfaces;
 using Vardcentral.Application.Services;
 using Vardcentral.Application.Strategier;
-using Vardcentral.Infrastructure;
+using Vardcentral.Application.Infrastructure;
 using Vardcentral.Application;
-
 // två vårdcentraler
 var norr = new Vårdcentral(1, "Vårdcentralen Norr");
 var söder = new Vårdcentral(2, "Vårdcentralen Söder");
@@ -16,35 +15,35 @@ var rumNorr2 = new Rum(2, "Rum 2(Norr)");
 var rumSöder1 = new Rum(3, "Rum 1 ( Söder)");
 var rumSöder2 = new Rum(4, "Rum 2 ( Söder)");
 
-var personalRepo = new MinnePersonalRepository();
+var personalRepo = new  InMemoryPersonalRepository();
 personalRepo.LäggTill(new Personal("Ahmad", "Anna", Personaltyp.Läkare, "100001", norr, rumNorr1));
-personalRepo.LäggTill(new Personal("Sarra", "Diana", Personaltyp.sjuksköterska, "100002", norr, rumNorr2));
+personalRepo.LäggTill(new Personal("Sarra", "Diana", Personaltyp.Sjuksköterska, "100002", norr, rumNorr2));
 personalRepo.LäggTill(new Personal("Adem", "Rena", Personaltyp.Fysioterapeut, "100003", norr, rumNorr2));
 personalRepo.LäggTill(new Personal("Fanar", "Delina", Personaltyp.Läkare, "200001", söder, rumSöder2));
-personalRepo.LäggTill(new Personal("Eva", "Fredik", Personaltyp.sjuksköterska, "200002", söder, rumSöder2));
+personalRepo.LäggTill(new Personal("Eva", "Fredik", Personaltyp.Sjuksköterska, "200002", söder, rumSöder2));
 personalRepo.LäggTill(new Personal("Nour", "Aya", Personaltyp.Fysioterapeut, "200003", söder, rumSöder2));
 
 // Våra antagnaden:fasta längder.
 var besökstyper = new List<Besöktyp>
 {
     new Besöktyp("Läkarbesök", 10, Personaltyp.Läkare),
-    new Besöktyp("sjuksköterskebesök", 20, Personaltyp.sjuksköterska),
+    new Besöktyp("sjuksköterskebesök", 20, Personaltyp.Sjuksköterska),
     new Besöktyp("Fysioterapi", 45, Personaltyp.Fysioterapeut),
 };
-var akutTyp = new Besöktyp("Akut", 30, Personaltyp.sjuksköterska),// personalen avgör akut
+var akutTyp = new Besöktyp("Akut", 30, Personaltyp.Sjuksköterska);// personalen avgör akut
 
 // Påhittade patienter.
 var patienter = new List<Patient>{
 
-   var patient("Sara","Andersson", "0001011234"),
-    var patient("Omer","Ahmad", "0002025678")
+    new Patient("Sara","Andersson", "0001011234"),
+    new Patient("Omer","Ahmad", "0002025678")
  };
 
 // koppla ihop klasserna//
 var bokningRepo = new MinnesBokningRepository();
 var tidsSökare = new TidsSökare(personalRepo, bokningRepo);
 var notiser = new NotifieringsService();
-notiser.Prenumerera(new konsolNotifierare());// observer 
+notiser.Prenumerera(new KonsolNotifierare());// observer 
 IBokningsService service = new BokningsService(bokningRepo, personalRepo, tidsSökare, notiser, new AkutFörstRegel());// Strategy
 
 //---meny---//
@@ -90,13 +89,13 @@ void SökOchBoka()
     // två listor : vem och när, på samma plats
     var personer = new List<Personal>();
     var tider = new List<Tidslucka>();
-    foreach (var lediga in service.SökledigaTider(typ, vc, dag))
+    foreach (var lediga in service.SökLedigaTider(typ, vc, dag))
     {
 
         for (int i = 0; i < lediga.Tider.Count && i < 10; i++)  // högst 10 person
         {
 
-            personer.Add(lediga.personal);
+            personer.Add(lediga.Personal);
             tider.Add(lediga.Tider[i]);
         }
 
@@ -139,14 +138,14 @@ void AvbokaMeny()
 // Personal bokar akut : Första lediga tid idag.
 void BokaAkutMeny()
 {
-    patient patient = VäljPatient();
+    Patient patient = VäljPatient();
     Vårdcentral vc = VäljVårdcentral();
     var bokning = service.BokaAkut(akutTyp, vc, DateTime.Today, patient);
     if (bokning == null)
         Console.WriteLine("Ingen ledig akuttid i dag på den vårdcentralen.");
 
 }
-// Personalen ställer in : flyttta till andra vårdcentralen eller blir inställd.
+// Personalen ställer in : flytta till andra vårdcentralen eller blir inställd.
 void StällInMeny()
 {
     int id = LäsHeltal("Boknings-id att ställa in :", 1, int.MaxValue);
@@ -155,7 +154,7 @@ void StällInMeny()
 
 }
 // Visar alla aktiva bokningar, akut först 
-  Void VisaAllaAktiva()
+  void VisaAllaAktiva()
 {
     var aktiva = service.HämtaAktivaSorterade();
     if (aktiva.Count == 0)
@@ -182,9 +181,9 @@ Patient VäljPatient()
 // användaren väljer vårdcentral
 Vårdcentral VäljVårdcentral()
 {
-    for (int i = 0; i < vårdcentraler.Count; i++)
-        Console.WriteLine($"{i + 1}. {vårdcentraler[i].Namn}");
-    return Vårdcentraler[LäsHeltal("Vårdcentral:  ", 1, vårdcentraler.Count) - 1];
+    for (int i = 0; i < Vårdcentraler.Count; i++)
+        Console.WriteLine($"{i + 1}. {Vårdcentraler[i].Namn}");
+    return Vårdcentraler[LäsHeltal("Vårdcentral:  ", 1, Vårdcentraler.Count) - 1];
 
 }
 
@@ -214,6 +213,7 @@ DateTime LäsDatum(string fråga)
         Console.WriteLine("Skriv ett datum i formen 2026-11-14 eller senare).");
     }
 }
+
 
 
 
