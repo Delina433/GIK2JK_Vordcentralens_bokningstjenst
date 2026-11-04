@@ -12,11 +12,11 @@ public interface IBokningsService
 
     bool Avboka(int bokningId);
 
-    bool StällIn(Bokning bokning);
+    bool StällIn(int bokning);
 
     List<Bokning> HämtaBokningar(string personanummer);
 
-    List<LedigaTider> SökledigaTider(Besöktyp typ, Vårdcentral vårdcentral, DateTime dag);
+    List<LedigaTider> SökLedigaTider(Besöktyp typ, Vårdcentral vårdcentral, DateTime dag);
 
     List<Bokning> HämtaAktivaSorterade();
 }
