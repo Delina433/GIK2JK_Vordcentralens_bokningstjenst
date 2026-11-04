@@ -1,40 +1,51 @@
 using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
-using Vardcentral.Domain.Enums;
+using System.Data.Common;
+
 
 namespace Vardcentral.Infrastructure;
 
 
 public class MinneBokningRepository : IBokningsRepository
 {
-    private readonly List<Personal> _personal = new();
+    private readonly List<Bokning> _bokningar = new();
 
-    public void LäggTill(Personal person)
+    public void LäggTillBokning(Bokning bokning)
     {
-        if (person == null)
-        throw new ArgumentNullException(nameof(person));
+        if (bokning == null)
+        throw new ArgumentNullException(nameof(bokning));
     
-        _personal.Add(person);
+        _bokningar.Add(bokning);
     }
 
-    public Personal? Hämta(string id)
+    public Bokning? HämtaBokning(int id)
     {
-        if (string.IsNullOrWhiteSpace(id))
-            return null;
-
-        foreach (var person in _personal)
+        foreach (var bokning in _bokningar)
         {
-            if (person.Id == id)
-                return person;
+            if (bokning.Id == id)
+                return bokning;
         }
         return null;
     }
-    public List<Personal> HämtaAlla()
+    public List<Bokning> HämtaAllaBokningar()
     {
-        return new List<Personal>(_personal);
+        return new List<Bokning>(_bokningar);
 
     }
+    public void UppdaderaBokning(Bokning bokning)
+    {
+        if(bokning == null)
+        throw new ArgumentNullException(nameof(bokning));
+        
+        for (int i = 0; i <_bokningar.Count; i++)
+        {
+            if (_bokningar[i].Id == bokning.Id)
+            {
+                _bokningar[i] = bokning;
+                return;
+            }
+        }
 
-
-
+        throw new ArgumentException("Bokningen finns inte.");
+    }
 }
