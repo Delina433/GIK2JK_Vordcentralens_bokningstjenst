@@ -10,16 +10,16 @@ var norr = new Vårdcentral(1, "Vårdcentralen Norr");
 var söder = new Vårdcentral(2, "Vårdcentralen Söder");
 var Vårdcentraler = new List<Vårdcentral> { norr, söder };
 // Rum kan delas av flera 
-var rumNorr1 = new Rum(1, "Rum 1 (Norr)");
-var rumNorr2 = new Rum(2, "Rum 2(Norr)");
-var rumSöder1 = new Rum(3, "Rum 1 ( Söder)");
-var rumSöder2 = new Rum(4, "Rum 2 ( Söder)");
+var rumNorr1 = new Rum(1,"Rum 1 (Norr)");
+var rumNorr2 = new Rum(2,"Rum 2(Norr)");
+var rumSöder1 = new Rum(3,"Rum 1 ( Söder)");
+var rumSöder2 = new Rum(4,"Rum 2 ( Söder)");
 
 var personalRepo = new  MinnePersonalRepository();
 personalRepo.LäggTill(new Personal("Ahmad", "Anna", Personaltyp.Läkare, "100001", norr, rumNorr1));
 personalRepo.LäggTill(new Personal("Sarra", "Diana", Personaltyp.Sjuksköterska, "100002", norr, rumNorr2));
 personalRepo.LäggTill(new Personal("Adem", "Rena", Personaltyp.Fysioterapeut, "100003", norr, rumNorr2));
-personalRepo.LäggTill(new Personal("Fanar", "Delina", Personaltyp.Läkare, "200001", söder, rumSöder2));
+personalRepo.LäggTill(new Personal("Fanar", "Delina", Personaltyp.Läkare, "200001", söder, rumSöder1));
 personalRepo.LäggTill(new Personal("Eva", "Fredik", Personaltyp.Sjuksköterska, "200002", söder, rumSöder2));
 personalRepo.LäggTill(new Personal("Nour", "Aya", Personaltyp.Fysioterapeut, "200003", söder, rumSöder2));
 
@@ -52,7 +52,7 @@ while (kör)
 {
     Console.WriteLine();
     Console.WriteLine("==Vårdcentralens bokningstjänst==");
-    Console.WriteLine("patient:");
+    Console.WriteLine("Patient:");
     Console.WriteLine(" 1. Sök lediga tider och boka");
     Console.WriteLine(" 2. Visa mina bokningar");
     Console.WriteLine(" 3. Avboka");
