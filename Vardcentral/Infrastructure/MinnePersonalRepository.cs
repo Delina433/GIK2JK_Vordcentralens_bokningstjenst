@@ -1,28 +1,20 @@
-using Vardcentral.Domain.Enums;
-
+using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
 
-namespace Vardcentral.Infrastructure;
+namespace Vardcentral.Application.Infrastructure;
 
 
-public class MinnePersonalRepository : IPersonalRepository
+public class InMemoryPersonalRepository : IPersonalRepository
 {
-    private readonly List<Personal> _personal = new ();
+    private readonly List<Personal> _personal = new List<Personal>();
 
     public void LäggTill(Personal person)
     {
-        if (person == null)
-            throw new ArgumentNullException(nameof(person));
-
-            
         _personal.Add(person);
     }
 
     public Personal? Hämta(string id)
     {
-        if (string.IsNullOrWhiteSpace(id))
-            return null;
-
         foreach (var person in _personal)
         {
             if (person.Id == id)
@@ -39,6 +31,3 @@ public class MinnePersonalRepository : IPersonalRepository
 
 
 }
-
-
-
