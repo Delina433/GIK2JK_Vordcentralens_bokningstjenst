@@ -1,7 +1,7 @@
 using Vardcentral.Domain;
 
 namespace Vardcentral.Application.Interfaces;
-
+// Sparar och hämtar bokningar bara lagring.
 public interface IBokningsRepository
 {
       void LäggTillBokning (Bokning bokning);
