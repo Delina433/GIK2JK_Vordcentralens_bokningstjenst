@@ -23,33 +23,35 @@ public class BokningsService : IBokningsService
         _notiser = notiser;
         _prioritet = prioritet;
     }
-
+    //Grön: Vanlig bokning
     public Bokning? SkapaBokning(Besöktyp typ, Personal personal, Tidslucka tid, Patient patient)
     {
-        return Skapa (typ, personal, tid, patient, BokningsPrioritet.Normal);
+        return Skapa (typ, personal, tid, patient, BokningsPrioritet.Grön);
     }
-
+    // Gul: tidigast lediga tid i dag på vald vårdcentral.
     public Bokning? BokaAkut(Besöktyp akutTyp, Vårdcentral vårdcentral, DateTime dag, Patient patient)
     {
-        LedigaTider?  bästaTid = null;
-
-        foreach (LedigaTider lediga in _tidsSökare.SökLedigaTider(akutTyp, vårdcentral, dag))
+        Bokning? bokning = BokaTidigast(akutTyp, vårdcentral, dag, patient);
+        if (bokning != null)
         {
-            if (lediga.Tider.Count == 0) continue;
+            return bokning;
+        }
+     
 
-            if (bästaTid == null || lediga.Tider[0].Start < bästaTid.Tider[0].Start)
+        foreach ( Vårdcentral annan in HämtaAndraVårdcentraler(vårdcentral))
+        {
+            bokning = BokaTidigast(akutTyp, annan, dag, patient);
+            if (bokning != null)
             {
-                bästaTid = lediga;
+                return bokning;
             }
-                
+
+
         }
         
-        if (bästaTid == null)
-        {
-            return null; //ingen ledig tid denna dag
-        }
+        return null;
             
-        return Skapa(akutTyp, bästaTid.Personal, bästaTid.Tider[0], patient, BokningsPrioritet.Akut);
+        
     }
 
     public bool Avboka(int bokningsId)
@@ -84,7 +86,7 @@ public class BokningsService : IBokningsService
         {
             if (person.Typ !=bokning.Personal.Typ) continue;
 
-            if (person.Vårdcentral.Id != bokning.Personal.Vårdcentral.Id)continue;
+            if (person.Vårdcentral.Id == bokning.Personal.Vårdcentral.Id)continue;
 
             if (_tidsSökare.ÄrTillgänglig(person, person.Rum, bokning.Tid))
             {
@@ -126,6 +128,7 @@ public class BokningsService : IBokningsService
         return _tidsSökare.SökLedigaTider(typ, vårdcentral, dag);
     }
 
+    //Sortera med de valda reglerna
     public List<Bokning> HämtaAktivaSorterade()
     {
         List<Bokning> aktiva = new List<Bokning>();
@@ -140,6 +143,50 @@ public class BokningsService : IBokningsService
         }
         aktiva.Sort(_prioritet.Jämför);
         return aktiva;
+    }
+
+    private Bokning? BokaTidigast(Besöktyp akutTyp, Vårdcentral vårdcentral, DateTime dag, Patient patient)
+    {
+        LedigaTider?  bästa = null;
+
+        foreach (LedigaTider lediga in _tidsSökare.SökLedigaTider(akutTyp, vårdcentral, dag))
+        {
+            if (lediga.Tider.Count == 0) continue;
+            if (bästa == null || lediga.Tider[0].Start <bästa.Tider[0].Start)
+            {
+                bästa = lediga;
+            }
+        }
+        if (bästa ==null)
+          return null;
+
+        return Skapa(akutTyp, bästa.Personal, bästa.Tider[0], patient, BokningsPrioritet.Gul); 
+
+    }
+
+    private List<Vårdcentral>HämtaAndraVårdcentraler(Vårdcentral nuvarande)
+    {
+        List<Vårdcentral> andra = new List<Vårdcentral>();
+
+        foreach (var person in _personal.HämtaAlla())
+        {
+            if (person.Vårdcentral.Id == nuvarande.Id) continue;
+            
+            bool finnsRedan = false;
+            foreach (var vc in andra)
+            {
+                if (vc.Id == person.Vårdcentral.Id)
+                {
+                    finnsRedan = true;
+                } 
+                if (!finnsRedan)
+                {
+                    andra.Add(person.Vårdcentral);
+                }
+            }              
+            
+        }
+        return andra;
     }
 
     private Bokning? Skapa(Besöktyp typ, Personal personal, Tidslucka tid, Patient patient, BokningsPrioritet prioritet)
