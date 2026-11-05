@@ -3,6 +3,9 @@ namespace Vardcentral.Domain.Enums;
 
 public enum  BokningsPrioritet
 {
-    Normal,
-    Akut 
+    Röd, // livshotande ambulansen skickas direkt
+
+    Gul, // akut: tidigaste lediga tid i dag, anars hänvisas till den andra Vårdcentralen 
+
+    Grön, //vanliga bokningar 
 }
