@@ -5,6 +5,7 @@ namespace Vardcentral.UI;
 
 public class PersonalMeny
 {
+
     private readonly IBokningsService _tjänst;
     private readonly IPatientRepository _patienter;
     private readonly Besöktyp _akutTyp;
@@ -15,7 +16,6 @@ public class PersonalMeny
         _tjänst = tjänst;
         _patienter = patienter;
         _akutTyp = akutTyp;
-        _besökstyper = besökstyper;
 
     }
     public void Kör(Vårdcentral vårdcentral)
@@ -51,7 +51,9 @@ public class PersonalMeny
                     klar = true;
                     break;
             }
+
         }
+
     }
 
     private List<Bokning> AktivaHär(Vårdcentral vårdcentral)
@@ -61,19 +63,20 @@ public class PersonalMeny
         {
 
 
-            if (bokning.Personal.Vårdcentral.Id != vårdcentral.Id)
+            if (bokning.Personal.Vårdcentral.Id == vårdcentral.Id)
             {
                 resultat.Add(bokning);
 
             }
-            return resultat;
         }
+        return resultat;
+        }
+    
 
         private void VisaAktiva(Vårdcentral vårdcentral)
     {
         List<Bokning> aktiva = AktivaHär(vårdcentral);
-        if (aktiva.Count == 0)
-        {
+        
             Console.WriteLine();
             if (aktiva.Count == 0)
             {
@@ -85,6 +88,7 @@ public class PersonalMeny
             {
                 Console.WriteLine("  " + KonsolHjälp.BokningsText(bokning, true));
             }
+    }
             private void AkutBedömning(Vårdcentral vårdcentral)
     {
         KonsolHjälp.Rubrik("AKUT BEDÖMNING");
@@ -108,15 +112,21 @@ public class PersonalMeny
             return;
         }
         string personnummer = KonsolHjälp.LäsPersonnummer("Patientens personnummer (10 siffror): ");
+        if (personnummer == null)
+        {
+            Console.WriteLine("\n Ogiltigt personnummer.");
+            return;
+        }
 
 
-        patient? patient = _patienter.Hämta(personnummer);
+        Patient? patient = _patienter.Hämta(personnummer);
         if (patient == null)
         {
             Console.WriteLine("\n Patient är inte registrerad.Patienten behöver först boka en tid i patientmenyn.");
 
             return;
         }
+
         Bokning? bokning = _tjänst.BokaAkut(_akutTyp, vårdcentral, DateTime.Today, patient);
         if (bokning == null)
         {
@@ -127,14 +137,15 @@ public class PersonalMeny
 
         if (bokning.Personal.Vårdcentral.Id != vårdcentral.Id)
         {
-            Console.WriteLine($"\n Ingen tid på {vårdcentral.Namn}. Patienten skickas till {bokning.Personal.Vårdcentral.Namn}.");
-            Console.WriteLine($"\n Gul Tid bokad : " + KonsolHjälp.BokningsText(bokning, true));
+            Console.WriteLine($"\n  Ingen tid på {vårdcentral.Namn}. Patienten skickas till {bokning.Personal.Vårdcentral.Namn}.");
+            Console.WriteLine($"\n  Gul Tid bokad : " + KonsolHjälp.BokningsText(bokning, true));
 
 
         }
+    }
 private void StällIn(Vårdcentral vårdcentral)
     {
-        Consol.WriteLine("\n Vilket besök ska ställas in?");
+        Console.WriteLine("\n Vilket besök ska ställas in?");
         Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
 
         if (bokning == null)
@@ -145,8 +156,10 @@ private void StällIn(Vårdcentral vårdcentral)
             Console.WriteLine(" Bokningen gick inte att ställa in.");
 
         }
+    }
+
         private void Avboka(Vårdcentral vårdcentral)
-         console.WriteLine("\n Vilken bokning ska avbokas?");
+         Console.WriteLine("\n Vilken bokning ska avbokas?");
       Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
     if (bokning == null)
     return;
@@ -156,31 +169,8 @@ if (!_tjänst.Avboka(bokning.Id))
     Console.WriteLine(" Bokningen gick inte att avboka.");
 
 }
-            }
-
-
-
-        
-
-            
-
-
-        
-    }
-    private void Avboka(Vårdcentral vårdcentral)
-{
-    var bokning = KonsolHjälp.Välj("Vilken bokning ska avbokas?", AktivaHär(vårdcentral),
-    b => KonsolHjälp.BokningsText(b, true));
-    if (bokning == null)
-        return;
-
-    if (!_tjänst.Avboka(bokning.Id))
-
-        Console.WriteLine(" Bokningen gick inte att avboka.");
-
-}
-
-
+ }    
+   
 
 
 

@@ -86,6 +86,7 @@ public class KonsolHjälp
         }
     }
 
+
     public static DateTime LäsDatum(string fråga)
     {
         while (true)

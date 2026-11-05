@@ -5,7 +5,7 @@ namespace Vardcentral.UI;
 public class HuvudMeny
 {
 
-    private readonly List<Vårdcentral> _vaårdcentraler;
+    private readonly List<Vårdcentral> _vårdcentraler;
     private readonly PatientMeny _patientMeny;
     private readonly PersonalMeny _personalMeny;
 
@@ -34,6 +34,7 @@ public class HuvudMeny
                 VäljRoll(_vårdcentraler[nr - 1]);
             }
         }
+    }
             private void VäljRoll(Vårdcentral vårdcentral)
     {
         while (true)
