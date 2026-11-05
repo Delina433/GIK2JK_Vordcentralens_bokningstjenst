@@ -111,7 +111,7 @@ public class PersonalMeny
             Console.WriteLine("\n Grön: Patienten får de tider som är kvar. Patienten bokas in som vanligt.");
             return;
         }
-        string personnummer = KonsolHjälp.LäsPersonnummer("Patientens personnummer (10 siffror): ");
+        string? personnummer = KonsolHjälp.LäsPersonnummer("Patientens personnummer (10 siffror): ");
         if (personnummer == null)
         {
             Console.WriteLine("\n Ogiltigt personnummer.");
@@ -143,7 +143,7 @@ public class PersonalMeny
 
         }
     }
-private void StällIn(Vårdcentral vårdcentral)
+    private void StällIn(Vårdcentral vårdcentral)
     {
         Console.WriteLine("\n Vilket besök ska ställas in?");
         Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
@@ -152,24 +152,30 @@ private void StällIn(Vårdcentral vårdcentral)
             return;
 
         if (!_tjänst.StällIn(bokning.Id))
+            {
+                Console.WriteLine(" Bokningen gick inte att ställa in.");
+
+            }
+    }
+
+    private void Avboka(Vårdcentral vårdcentral)
+    {
+        Console.WriteLine("\n Vilken bokning ska avbokas?");
+       Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
+        if (bokning == null)
+            return;
+
+        if (!_tjänst.Avboka(bokning.Id))
         {
-            Console.WriteLine(" Bokningen gick inte att ställa in.");
+            Console.WriteLine(" Bokningen gick inte att avboka.");
 
         }
     }
-
-        private void Avboka(Vårdcentral vårdcentral)
-         Console.WriteLine("\n Vilken bokning ska avbokas?");
-      Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
-    if (bokning == null)
-    return;
-
-if (!_tjänst.Avboka(bokning.Id))
-{
-    Console.WriteLine(" Bokningen gick inte att avboka.");
-
+        
 }
- }    
+
+
+    
    
 
 

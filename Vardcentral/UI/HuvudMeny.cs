@@ -15,11 +15,11 @@ public class HuvudMeny
         _patientMeny = patientMeny;
         _personalMeny = personalMeny;
     }
-    public void kör()
+    public void Kör()
     {
         while (true)
         {
-            KonsolHjälp.Rubrik("VÅRDCENTRALENS bOKNINGSTJÄNST");
+            KonsolHjälp.Rubrik("VÅRDCENTRALENS BOKNINGSTJÄNST");
             for (int i = 0; i < _vårdcentraler.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {_vårdcentraler[i].Namn}");
