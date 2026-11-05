@@ -1,10 +1,7 @@
 using Vardcentral.Domain;
 using Vardcentral.Domain.Enums;
 using Vardcentral.Application.Interfaces;
-// Systemets "hjärna": tar emot anrop från menyn och styr de andra klasserna.
-// Källa: GRASP Controller (Tema 4). SOLID DIP: allt kommer in som interface i konstruktorn.
-// Regler från kundmötet: personal avgör akut; vid inställd tid försöker vi flytta
-// patienten till den andra vårdcentralen
+// Tar emot anrop från menyn och styr de andra klasserna.
 
 namespace Vardcentral.Application.Services;
 
