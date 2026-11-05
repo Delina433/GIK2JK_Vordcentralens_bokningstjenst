@@ -1,7 +1,7 @@
 using Vardcentral.Domain;
 
 namespace Vardcentral.Application.Interfaces;
-
+// Skickar ut meddelanden när en bokning ändras
 public interface INotifieringsService
 {
     //Registrerar en obseervatör som ska får info 
