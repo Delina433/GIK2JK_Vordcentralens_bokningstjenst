@@ -1,140 +1,186 @@
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
+
 using Vardcentral.Application.Interfaces;
 using Vardcentral.Domain;
-using Vardcentral.Domain.Enums; 
-
-namespace Vardcentral.UI; 
+namespace Vardcentral.UI;
 
 public class PersonalMeny
 {
     private readonly IBokningsService _tjänst;
     private readonly IPatientRepository _patienter;
     private readonly Besöktyp _akutTyp;
-    private readonly List<Besöktyp> _besökstyper;
 
-    public PersonalMeny(IBokningsService tjänst, IPatientRepository patienter,Besöktyp akutTyp, List<Besöktyp> besöktyper)
+
+    public PersonalMeny(IBokningsService tjänst, IPatientRepository patienter, Besöktyp akutTyp)
     {
         _tjänst = tjänst;
         _patienter = patienter;
         _akutTyp = akutTyp;
-        _besökstyper = _besökstyper;
+        _besökstyper = besökstyper;
 
     }
-    public void kör (Vårdcentral vårdcentral)
+    public void Kör(Vårdcentral vårdcentral)
     {
-        KonsolNotifierare.KörMeny($"{ vårdcentral.Namn}: bokningspersonal", "Logga ut",
-        new MenyVal("Akut bedömning(röd/ gul/ grön)"), () => AkutBedömning(vårdcentral)),
-        new MenyVal("Visa  alla aktiva bokningar ( mest brådskande först)", () => ComVisibleAttribute Aktiva(vårdcentral)),
-        new MenyVal("Visa lediga tider"), () => ComVisibleAttribute LedigaTider(vårdcentral)),
-        new MenyVal("Ställa in ett besök(t.ex. personal sjuk)", () => StällaIn(Vårdcentral)),
-        new MenyVal("Avboka ebn patients bokning", () => Avboka(vårdcentral)));
-
-        DisablePrivateReflectionAttribute void AkutBedömning(Vårdcentral vårdcentral)
+        bool klar = false;
+        while (!klar)
         {
-            Konsol.Rubrik("AKUT BEDÖMNING");
-            Console.WriteLine(" 1. Röd - Livhotande , ambulans direkt");
-      Console.WriteLine(" 2. Gul - akut , tidigaste tid i adg");
-      Console.WriteLine(" 3 .Grön - inte akut  - vanlig bokning");
-       Console.WriteLine(" 0. Avbryt");
+            KonsolHjälp.Rubrik(vårdcentral.Namn + " : bokningspersonal");
+            Console.WriteLine("  1. Visa alla aktiva bokningar (mest brådskande först)");
+            Console.WriteLine("  2. Akut bedömning (röd/gul/grön)");
+            Console.WriteLine("  3. Ställa in ett besök(t.ex. personal sjuk)");
+            Console.WriteLine("  4. Avboka en patients bokning");
+            Console.WriteLine("  0. Tillbaka");
 
-       int val = Konsol.LäsHeltal("\nVal: ",0,3");
-       if(val==0)
-       return;
-       // Röd: ambulansen ligger utanför vårt system
-       if (val==1)
+            int val = KonsolHjälp.LäsHeltal("\nVal: ", 0, 4);
+
+            switch (val)
             {
-                Console.WriteLine("\n Röd: Ring 112.Ambulans skickas direkt. Ingen tid bokas i systemet.");
-                Return;
+
+                case 1:
+                    VisaAktiva(vårdcentral);
+                    break;
+                case 2:
+                    AkutBedömning(vårdcentral);
+                    break;
+                case 3:
+                    StällIn(vårdcentral);
+                    break;
+                case 4:
+                    Avboka(vårdcentral);
+                    break;
+                case 5:
+                    klar = true;
+                    break;
             }
-            //Grön: vanlig bokning, patienten får de tider som är kvar.
-            if (val == 3)
-            {
-                Console.WriteLine(\n GRÖN: inte akut.Patienten bokar en vanlig tid i patientmenyn.");
-                return;
-            }
-            // Gul:tidigaste tid i dag,annars andra vårdcentralen.
-            string personnummer = KonsolNotifierare.LäsPersonnummer("Patientens personnummer(10 siffror): ");
-            var patient = _patienter.Hämta(personnummer);
-            if(patient == null)
-            {
-                Console.WriteLine("  Patienten är inte registrerad. Patienten behöver först registrera sig i patientmenyn.");
-                return;
-            }
-            var bokning = _tjänst.BokaAkut(_akutTyp, Vårdcentral, DateTime.Today, patient);
-            if (bokning == null)
-            {
-                Console.WriteLine("  Ingen ledig akuttid idag på någon vårdcentral. Överväg röd ( ambulans).");
-                return;
-            }
+        }
+    }
+
+    private List<Bokning> AktivaHär(Vårdcentral vårdcentral)
+    {
+        List<Bokning> resultat = new List<Bokning>();
+        foreach (var bokning in _tjänst.HämtaAktivaSorterade())
+        {
+
+
             if (bokning.Personal.Vårdcentral.Id != vårdcentral.Id)
-            Console.WriteLine($"\n   Ingen tid på { vårdcentral.Namn}. Patienten skickas till { bokning.Personal.Vårdcentral.Namn}.");
+            {
+                resultat.Add(bokning);
 
-            Console.WriteLine($"\n GUL tid bokad: { konsol.BokningsText(bokning, true)}");
+            }
+            return resultat;
         }
-        // Aktiva boknigar på vald vårdcentral, mest brådskande först
-        DisablePrivateReflectionAttribute List<Bokning> AktivHär (Vårdcentral vårdcentral)
-        {
-            return_tjänst.HämtaAktivaSorterade()
-            .Where(b => b.Personal.Id == vårdcentral.Id).Tolist();
 
-        }
-          
-           private void VisaAktiva(Vårdcentral vårdcentral)
+        private void VisaAktiva(Vårdcentral vårdcentral)
+    {
+        List<Bokning> aktiva = AktivaHär(vårdcentral);
+        if (aktiva.Count == 0)
         {
-            var aktiva = AktivaHär(vårdcentral);
             Console.WriteLine();
             if (aktiva.Count == 0)
             {
                 Console.WriteLine("  Ingen aktiva bokningar.");
                 return;
             }
-            foreach ( var bokning in aktiva)
-            Console.WriteLine("   " + KonsolNotifierare.BokningsText(bokning, true));
 
-            // User Story 7:personalen ser lediga tider för att hjälpa till med bokningar.
-            
-            Private void VisaLedigaTider(Vårdcentral vårdcentral)
-        {
-            var typ = KonsolNotifierare.Välj("Vilket besök?"), _besökstyper, b=<$"{b.Namn}  ({b.LängdMinut} min)");
-            if (typ == null)
-            return;
-            DateTime dag = KonsolNotifierare.LäsDatum("åååå-mm-dd, Enter =idag): ");
-            var lediga = _tjänst.SökLedigaTider(typ, vårdcentral, dag);
-            if (lediga.Count == 0)
+            foreach (Bokning bokning in aktiva)
             {
-                Console.WriteLine("  Inga lediga tider (helg eller fullbokat).");
-                return;
+                Console.WriteLine("  " + KonsolHjälp.BokningsText(bokning, true));
             }
-            foreach (var I in lediga)
-            Console.WriteLine($"   { 1.personal.Namn} { 1.personal.Efternamn}:  { 1.Tider.Count} lediga tider, först{1.Tider[0].Start:HH:mm }")
+            private void AkutBedömning(Vårdcentral vårdcentral)
+    {
+        KonsolHjälp.Rubrik("AKUT BEDÖMNING");
+        Console.WriteLine(" 1. Röd - Livshotande, ambulans direkt");
+        Console.WriteLine(" 2. Gul - Akut, tidigaste tid i dag");
+        Console.WriteLine(" 3. Grön - Inte akut, vanlig bokning");
+        Console.WriteLine(" 0. Avbryt");
+
+        int val = KonsolHjälp.LäsHeltal("\nVal: ", 0, 3);
+
+        if (val == 0)
+            return;
+        if (val == 1)
+        {
+            Console.WriteLine("\n Röd: Ring 112. Ambulans skickas direkt. Ingen tid bokas i systemet.");
+            return;
+        }
+        if (val == 3)
+        {
+            Console.WriteLine("\n Grön: Patienten får de tider som är kvar. Patienten bokas in som vanligt.");
+            return;
+        }
+        string personnummer = KonsolHjälp.LäsPersonnummer("Patientens personnummer (10 siffror): ");
+
+
+        patient? patient = _patienter.Hämta(personnummer);
+        if (patient == null)
+        {
+            Console.WriteLine("\n Patient är inte registrerad.Patienten behöver först boka en tid i patientmenyn.");
+
+            return;
+        }
+        Bokning? bokning = _tjänst.BokaAkut(_akutTyp, vårdcentral, DateTime.Today, patient);
+        if (bokning == null)
+        {
+            Console.WriteLine("\n Ingen ledig akuttid idag på någon vårdcentral. Överväg röd(ambulans).");
+
+            return;
+        }
+
+        if (bokning.Personal.Vårdcentral.Id != vårdcentral.Id)
+        {
+            Console.WriteLine($"\n Ingen tid på {vårdcentral.Namn}. Patienten skickas till {bokning.Personal.Vårdcentral.Namn}.");
+            Console.WriteLine($"\n Gul Tid bokad : " + KonsolHjälp.BokningsText(bokning, true));
+
 
         }
-            private void SttällIn (Vårdcentral vårdcentral)
+private void StällIn(Vårdcentral vårdcentral)
     {
-        var bokning = KonsolNotifierare.Välj("vilket besök ska ställas in?", AktivaHär(vårdcentral), 
-        b =>Konsol.BokningsText(b, true));
-        if(bokning == null)
-        return;
-        if(!_tjänst .StällIn (bokning.Id))
-        Console.WriteLine("  Bokningen gick inte att ställa in.");
+        Consol.WriteLine("\n Vilket besök ska ställas in?");
+        Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
 
-    }
-    private void Avboka(Vårdcentral vårdcentral)
-    {
-        var bokning = Konsol.Välj("Vilken bokning ska avbokas?", AktivaHär(vårdcentral),
-        b => Konsol.BokningsText(b, true));
         if (bokning == null)
             return;
-    }
-    if(!_tjänst.Avboka(bokning.Id))
-       Console.WriteLine(" Bokningen gick inte att avboka.");
+
+        if (!_tjänst.StällIn(bokning.Id))
+        {
+            Console.WriteLine(" Bokningen gick inte att ställa in.");
 
         }
+        private void Avboka(Vårdcentral vårdcentral)
+         console.WriteLine("\n Vilken bokning ska avbokas?");
+      Bokning? bokning = KonsolHjälp.VäljBokning(AktivaHär(vårdcentral), true);
+    if (bokning == null)
+    return;
+
+if (!_tjänst.Avboka(bokning.Id))
+{
+    Console.WriteLine(" Bokningen gick inte att avboka.");
+
+}
+            }
+
+
+
         
+
+            
+
+
         
-        
-    
-    
+    }
+    private void Avboka(Vårdcentral vårdcentral)
+{
+    var bokning = KonsolHjälp.Välj("Vilken bokning ska avbokas?", AktivaHär(vårdcentral),
+    b => KonsolHjälp.BokningsText(b, true));
+    if (bokning == null)
+        return;
+
+    if (!_tjänst.Avboka(bokning.Id))
+
+        Console.WriteLine(" Bokningen gick inte att avboka.");
+
+}
+
+
+
+
+
