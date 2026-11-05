@@ -1,7 +1,7 @@
 using Vardcentral.Domain;
 
 namespace Vardcentral.Application.Interfaces;
-
+// Den som vill få notiser
 public interface IBokningsObserver
 {
     //Den anropas när bokning ändringen publiceras
