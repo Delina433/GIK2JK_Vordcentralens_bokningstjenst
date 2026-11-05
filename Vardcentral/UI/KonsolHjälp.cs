@@ -1,3 +1,5 @@
+using Vardcentral.Domain;
+
 namespace Vardcentral.UI;
 
 public class KonsolHjälp
@@ -6,13 +8,13 @@ public class KonsolHjälp
     {
         Console.WriteLine();
         Console.WriteLine("=================================");
-        Console.WriteLine( " ") +text);
+        Console.WriteLine( " " + text);
         Console.WriteLine("=================================");
     }
 
     public static int LäsHeltal(string fråga, int min, int max)
     {
-        While (true)
+        while (true)
         {
             Console.WriteLine(fråga);
             string? text = Console.ReadLine();
@@ -74,44 +76,24 @@ public class KonsolHjälp
 
             if (text == "")
             {
-                return null;
-            }
-
-            if (text.Length == 10 && text.All(char.IsDigit))
-            {
-                return text;
-            }
-
-            Console.WriteLine("Personnummer ska vara 10 siffror, till exempel 0001011234.");
-        }
-    }
-
-
-    public static DateTime LäsDatum(string fråga)
-    {
-        while (true)
-        {
-            Console.Write(fråga);
-            string text = (Console.ReadLine()?? "").Trim();
-
-            if (text == "")
-            {
                 return DateTime.Today;
             }
 
-            if (DateTime.TryParse(text, out DateTime datum) && datum.Date  >= DateTime.Today)
+            if (DateTime.TryParse(text, out DateTime datum) && datum.Date >= DateTime.Today )
             {
                 return datum.Date;
             }
 
-            Console.WriteLine("Skriv ett datum i formatet åååå-mm-dd (Idag eller senare), eller tryck Enter.");
+            Console.WriteLine("Skriv ett datum i formatet åååå-mm-dd (Idag eller senare), eller tryck Enter." );
         }
     }
+
+
     public static string BokningsText(Bokning b, bool visaPatient)
     {
         string text = $"#{b.Id} {b.Tid.Start:yyyy-MM-dd HH:mm} {b.Typ.Namn}" +
-        $" {b.Personal.Namn} {b.Person.Efternamn}, {b.Personal.Vårdcentral.Namn}" +
-        $"{b.Rum.Nman} [{b.Status}, {b.Prioritet}]";
+        $" {b.Personal.Namn} {b.Personal.Efternamn}, {b.Personal.Vårdcentral.Namn}" +
+        $"{b.Rum.Namn} [{b.Status}, {b.Prioritet}]";
 
         if (visaPatient)
         {
@@ -138,7 +120,7 @@ public class KonsolHjälp
 
         int val = LäsHeltal("\nVal: ",0,bokningar.Count);
 
-        if(val = 0)
+        if(val == 0)
         {
             return null;
         }
