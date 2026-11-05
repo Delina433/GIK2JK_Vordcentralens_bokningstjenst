@@ -9,13 +9,10 @@ public class AkutFörstRegel : IPrioritetStrategi
 {
     public int Jämför(Bokning a, Bokning b)
     {
-        // olika prioritet : den akuta går först.
+        // olika prioritet : den högsta prioriteten först 
         if (a.Prioritet != b.Prioritet)
         {
-            if (a.Prioritet == BokningsPrioritet.Akut)
-                return -1; // a först
-            else
-                return 1;//b först
+            return a.Prioritet.CompareTo(b.Prioritet);
         }
         // samma prioritet: tidigast tid först.
         return a.Tid.Start.CompareTo(b.Tid.Start);
