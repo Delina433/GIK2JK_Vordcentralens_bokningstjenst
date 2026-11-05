@@ -2,7 +2,7 @@ using Vardcentral.Domain;
 
 
 namespace Vardcentral.Application.Interfaces;
-
+// Hittar lediga tider och kontrollerar om en tid är ledig
 public interface ITidsSökare
 {
     //Söker efter lediga tider för en viss typ av vårdbesök.
