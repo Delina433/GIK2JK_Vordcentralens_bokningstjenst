@@ -153,7 +153,7 @@ public class PatientMeny
     {
         Console.WriteLine("\n Vilket besök gäller det?");
 
-        for (int i = 0; <_besöktyper.Count; i++)
+        for (int i = 0; i < _besöktyper.Count; i++)
         {
             Console.WriteLine($"{i +1}. {_besöktyper[i].Namn}({_besöktyper[i].LängdMinut}min)");
         }
@@ -170,7 +170,126 @@ public class PatientMeny
     }
     private LedigaTider? VäljPerson(List<LedigaTider> lediga)
     {
-        Personal p = lediga[i].Personal;
-        Console
-    } 
-}
+        Console.WriteLine("\n Vilken personal vill du träffa?");
+        for(int i = 0; i < lediga.Count; i++)
+        {
+            Personal p = lediga[i].Personal;
+            Console.WriteLine($" {i + 1}. {p.Namn} ({p.Typ},{p.Rum.Namn})," +
+            $"  första lediga tid{lediga[i].Tid[0].Start:yyyy-MM-dd HH:mm}");
+             {p.Vårdcentral.Namn}");
+        }
+       Console.WriteLine(" 0. Avbryt");
+
+        int val = KonsolHjälp.LäsHeltal("\nVal: ", 0, lediga.Count);
+
+        if (val == 0)
+        {
+            return null;
+        }
+
+        return lediga[val - 1];
+    }
+     private Tidslucka? VäljTid(List<Tidslucka> tider)
+    {
+        List<Tidslucka> sorterade = new List<Tidslucka>(tider);
+        foreach (Tidslucka tid in tider)
+
+        {
+            if (tid.Start .Minute %15 == 0 && visade.Count< 12)
+            visade.Add(tid);
+            
+            {
+                if(visade.Count == 0)
+                {
+                  for(int i = 0; i <tider.Count && i < 12; i++)
+                  visade.Add(tider[i]);
+                }
+                  Console.WriteLine("\n Ledig tider :");
+                  for (int i = 0; i < visade.Count; i++)
+                  {
+                    Console.WriteLine($" {i + 1}. {visade[i].Start:HH:mm} 
+                    Console.WriteLine( 0. Avbryt");
+                    int val = KonsolHjälp.LäsHeltal("\nVal: ", 0, visade.Count);
+                    if (val == 0)
+                    {
+                        return null;
+                        return visade[val - 1]; 
+                    }
+                  privte void VisaAndraVårdcentraler(Besöktyp typ, Vårdcentral nuvarande, DateTime dag)
+        {
+           foreach (Vårdcentral annan in  _vårdcentraler)
+            {
+                if (annan.Id == nuvarande.Id) 
+                continue;
+
+                List<LedigaTider> lediga = _tjänst.SökLedigaTider(typ, annan, dag);
+
+                if (lediga.Count == 0)
+                 continue;
+                 List<Tidslucka> ledig  = _Tjänst.SökledigaTider(typ, annan, dag);
+                 if (ledig.Count == 0)
+                    continue;
+                    DateTime tidigaste = ledig[0].Start;
+                    foreach(LedigaTider l in lediga)
+                    {
+                        if (l.Tider.Count == 0)
+                         continue;
+                        if (l.Tider[0].Start < tidigaste)
+                        
+                            tidigaste = l.Tider[0].Start;
+                        }
+                    }
+
+                Console.WriteLine($"\n Det finns lediga tider hos {annan.Namn} , tidigaste kl  tid är {tidigaste: HH:mm}."+
+                "Gå tillbabaka och välja den vårdcentralen för att boka där.");
+
+                
+            }
+                  }
+                  private void VisaBokningar ()
+    {   
+        Patient? patient = HittaEllerRegistrera();
+        if (patient == null)
+        {
+            return;
+            List<Bokning> mina = _tjänst.HämtaBokningarFörPatient(patient.Personnummer);
+            mina.Sort((a, b) => a.Tid.Start.CompareTo(b.Tid.Start));
+            console.WriteLine();
+            if (mina.Count == 0)
+            {
+                Console.WriteLine("  Du har inga bokningar.");
+                return;
+            }
+            foreach (Bokning bokning in mina)
+            {
+                Console.WriteLine("  " + KonsolHjälp.BokningsText(bokning, false));
+            }
+            private void Avboka()
+            {
+                Patient? patient = HittaBeFintPatient();
+                if (patient == null)
+                {
+                    return;
+                }
+                List<Bokning> aktiva= new List<Bokning>();
+                foreach (Bokning bokning in _tjänst.HämtaBokningar(patient.Personnummer))
+                {
+                    if (bokning.ÄrAktiv)
+                    {
+                        aktiva.Add(bokning);
+                    }
+                    aktiva.Sort((a, b) => a.Tid.Start.CompareTo(b.Tid.Start));
+                    Console.WriteLine("\n  Vilken bokning vill du avboka?");
+                    Bokning? bokning = KonsolHjälp.VäljBokning(aktiva, false);
+                    if(vald == null)
+                    {
+                        return;
+                        if (!_tjänst.Avboka(vald.Id))
+                        {
+                            Console.WriteLine("  Bokningen gick inte att avboka.");
+                        }
+
+                    }
+                }
+            }
+                    
