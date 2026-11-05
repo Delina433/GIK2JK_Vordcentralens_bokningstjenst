@@ -1,7 +1,7 @@
 using Vardcentral.Domain;
 using Vardcentral.Domain.Enums;
 using Vardcentral.Application.Interfaces;
-
+// Tar emot anrop från menyn och styr de andra klasserna.
 
 namespace Vardcentral.Application.Services;
 

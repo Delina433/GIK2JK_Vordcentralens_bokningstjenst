@@ -3,6 +3,7 @@ using Vardcentral.Application.Interfaces;
 
 
 namespace Vardcentral.Application.Services;
+// Håller en lista med observatörer och skickar meddelanden till alla.
 
 public class NotifieringsService : INotifieringsService
 {
@@ -10,7 +11,7 @@ public class NotifieringsService : INotifieringsService
 
     public void Prenumerera(IBokningsObserver observer)
     {
-        if (!_observatörer.Contains(observer))
+        if (!_observatörer.Contains(observer))// samma observatör läggs inte till två gånger
         {
             _observatörer.Add(observer);
         }   

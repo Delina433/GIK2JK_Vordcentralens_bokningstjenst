@@ -3,7 +3,7 @@ using Vardcentral.Application.Interfaces;
 using Vardcentral.Domain.Enums;
 
 namespace Vardcentral.Application.Services;
-
+// Letar lediga tider
 public class TidsSökare : ITidsSökare
 {
     private const int Öppnar = 8;
@@ -22,7 +22,7 @@ public class TidsSökare : ITidsSökare
     public List<LedigaTider> SökLedigaTider(Besöktyp typ, Vårdcentral vårdcentral, DateTime dag)
     {
        List<LedigaTider> resultat = new List<LedigaTider>();
-
+       // Stängt på helger.
        if(dag.DayOfWeek == DayOfWeek.Saturday || dag.DayOfWeek == DayOfWeek.Sunday)
        {
         return resultat;
