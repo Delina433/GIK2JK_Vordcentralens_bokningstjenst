@@ -5,6 +5,8 @@ using Vardcentral.Application.Services;
 using Vardcentral.Application.Strategier;
 using Vardcentral.Infrastructure;
 using Vardcentral.UI;
+
+
 // två vårdcentraler
 var norr = new Vårdcentral(1, "Vårdcentralen Norr");
 var söder = new Vårdcentral(2, "Vårdcentralen Söder");
@@ -46,7 +48,8 @@ notiser.Prenumerera(new KonsolNotifierare());// observer
 IBokningsService service = new BokningsService(bokningRepo, personalRepo, tidsSökare, notiser, new AkutFörstRegel());// Strategy
 
 //---meny---//
-var patientMeny = new PatientMeny(service, patienteRepo, besökstyper, Vårdcentraler);
+IPatientService patientService = new PatientService(service, patienteRepo);
+var patientMeny = new PatientMeny(patientService, besökstyper, Vårdcentraler);
 var personalMeny = new PersonalMeny(service, patienteRepo, akutTyp);
 var huvudMeny = new HuvudMeny(Vårdcentraler, patientMeny, personalMeny);
 huvudMeny.Kör();

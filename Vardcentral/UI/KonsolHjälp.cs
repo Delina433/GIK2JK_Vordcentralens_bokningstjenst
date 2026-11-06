@@ -127,20 +127,12 @@ public class KonsolHjälp
         return bokningar[val-1];
     }
 
-    private Tidslucka? VäljTid(List<Tidslucka> tider)
+    public static Tidslucka? VäljTid(List<Tidslucka> tider)
     {
-        List<Tidslucka> visade = new List<Tidslucka>();
-
-        foreach (Tidslucka tid in tider)
+        List<Tidslucka> visade = tider.Where(t => t.Start.Minute %15 == 0).Take (12).ToList();
+        if(visade.Count == 0)
         {
-            if (tid.Start .Minute %15 == 0 && visade.Count< 12)
-            visade.Add(tid);
-        }
-            
-        if (visade.Count == 0)
-        {
-            for(int i = 0; i <tider.Count && i < 12; i++)
-            visade.Add(tider[i]);
+            visade = tider.Take(12).ToList();
         }
         
         Console.WriteLine("\n Ledig tider :");
@@ -154,11 +146,8 @@ public class KonsolHjälp
         
         int val = KonsolHjälp.LäsHeltal("\nVal: ", 0, visade.Count);
                     
-        if (val == 0)
-        {
-            return null;
-        }
-
+        if (val == 0) return null;
+        
         return visade[val - 1];
     }
 

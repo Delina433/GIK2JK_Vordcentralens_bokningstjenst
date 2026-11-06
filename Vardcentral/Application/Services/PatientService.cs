@@ -18,6 +18,12 @@ public class PatientService : IPatientService
     {
         return _patienter.Hämta(personnummer);
     }
+    public Patient RegistreraPatient(string förnamn, string efternamn, string personnummer)
+    {
+        Patient ny = new Patient(förnamn, efternamn, personnummer);
+        _patienter.LäggTill(ny);
+        return ny;
+    }
 
     public List<LedigaTider> SökLedigaTider(Besöktyp typ, Vårdcentral vårdcentral, DateTime dag)
     {

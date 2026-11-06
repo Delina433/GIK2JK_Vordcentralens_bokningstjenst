@@ -1,19 +1,16 @@
 using Vardcentral.Application.Interfaces;
 using Vardcentral.Domain;
-
 namespace Vardcentral.UI;
 
 public class PatientMeny
 {
-     private readonly IBokningsService _tjänst;
-    private readonly IPatientRepository _patienter;
+     private readonly IPatientService _tjänst;
     private readonly List<Besöktyp>_besöktyper;
     private readonly List<Vårdcentral> _vårdcentraler;
 
-    public PatientMeny(IBokningsService tjänst, IPatientRepository patienter, List<Besöktyp> besöktyper, List<Vårdcentral> vårdcentraler)
+    public PatientMeny(IPatientService tjänst, List<Besöktyp> besöktyper, List<Vårdcentral> vårdcentraler)
     {
         _tjänst = tjänst;
-        _patienter = patienter;
         _besöktyper = besöktyper;
         _vårdcentraler = vårdcentraler;
     }
@@ -45,15 +42,12 @@ public class PatientMeny
     {
         // 1.Nya patienter registreras här.
         Patient? patient = HittaEllerRegistrera();
-
         if (patient == null) return;
-        
 
         //2. Vilket besök
         Besöktyp? typ = VäljBesöktyp();
 
         if (typ == null) return;
-        
 
         //3. Viken dag
         DateTime dag = KonsolHjälp.LäsDatum("Datum(åååå-mm-dd, Enter = idag): ");
@@ -70,12 +64,10 @@ public class PatientMeny
 
         //5. Vem vill patientern träffa?
         LedigaTider? valdPersonal = VäljPerson(lediga);
-
         if (valdPersonal == null) return;
 
         //6. vilken tid
         Tidslucka? tid = KonsolHjälp.VäljTid(valdPersonal.Tider);
-
         if (tid == null) return;
         
 
@@ -97,10 +89,9 @@ public class PatientMeny
     private Patient? HittaEllerRegistrera()
     {
         string? personnummer = KonsolHjälp.LäsPersonnummer("Ditt personnummer (10 siffror, Enter = avbryt): ");
-
         if (personnummer == null) return null;
         
-        Patient? patient = _patienter.Hämta(personnummer);
+        Patient? patient = _tjänst.HämtaPatient(personnummer);
 
         if (patient != null)
         {
@@ -113,20 +104,17 @@ public class PatientMeny
         Console.WriteLine($"Vi hittar ingen personnummer{personnummer}.");
         Console.WriteLine(" 1. Jag är ny, jag vill registrera mig");
         Console.WriteLine(" 0. Avbryt");
-        Console.WriteLine("\nVal:");
 
         int val = KonsolHjälp.LäsHeltal("Val: ",0,1);
-         
          if(val ==0) return null;
         
     
-         string förnamn = KonsolHjälp.LäsNamn("Förenamn: ");
-         string efternamn = KonsolHjälp.LäsNamn("Efternamn: ");
+        string förnamn = KonsolHjälp.LäsNamn("Förenamn: ");
+        string efternamn = KonsolHjälp.LäsNamn("Efternamn: ");
 
-         Patient ny = new Patient(förnamn, efternamn, personnummer);
-         _patienter.LäggTill(ny);
-         Console.WriteLine($"Välkommen {ny.Namn} {ny.Efternamn}! Du är nu registrerad.");
-         return ny;
+         Patient ny = _tjänst.RegistreraPatient(förnamn, efternamn, personnummer);
+        Console.WriteLine($"Välkommen {ny.Namn} {ny.Efternamn}! Du är nu registrerad.");
+        return ny;
     }
 
     
@@ -173,25 +161,13 @@ public class PatientMeny
             if (annan.Id == nuvarande.Id) continue; // Hoppa över den vi redan kollat
 
             List<LedigaTider> lediga = _tjänst.SökLedigaTider(typ, annan, dag);
-
             if (lediga.Count == 0) continue;
             
-                
             //Varje persons lista är sorterad, så första tiden är den tidigast.
-            DateTime tidigast = lediga[0].Tider[0].Start;
-            
-            foreach(LedigaTider l in lediga)
-            {
-                if (l.Tider[0].Start < tidigast)
-                {
-                    tidigast = l.Tider[0].Start;
-                }            
-                        
-            }
+            DateTime tidigast = lediga.Min(l => l.Tider[0].Start);
             
             Console.WriteLine($" Det finns lediga tider hos {annan.Namn} , tidigast kl. {tidigast:HH:mm}."+
                 "Gå tillbabaka och välja den vårdcentralen för att boka där.");
-        
         }
                   
     }
@@ -201,10 +177,12 @@ public class PatientMeny
     {
         Patient? patient = HittaEllerRegistrera();
         if (patient == null) return;
-        
-        
-        List<Bokning> mina = _tjänst.HämtaBokningar(patient.Personnummer);
-         mina.Sort((a, b) => a.Tid.Start.CompareTo(b.Tid.Start)); // Tidigast först
+
+        // Tidigast först
+        List<Bokning> mina = _tjänst.HämtaBokningar(patient.Personnummer)
+                                    .OrderBy(b => b.Tid.Start)
+                                    .ToList();
+         
             
         
         KonsolHjälp.SkrivBokningar(mina, false,"Du har inga bokningar.");
@@ -243,7 +221,7 @@ public class PatientMeny
 
         if (personnummer == null) return null;
         
-        Patient? patient =_patienter.Hämta(personnummer);
+        Patient? patient =_tjänst.HämtaPatient(personnummer);
 
         if (patient == null)
         {
