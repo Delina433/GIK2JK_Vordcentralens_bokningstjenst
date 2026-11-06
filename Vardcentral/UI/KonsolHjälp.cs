@@ -127,4 +127,56 @@ public class KonsolHjälp
         return bokningar[val-1];
     }
 
+    private Tidslucka? VäljTid(List<Tidslucka> tider)
+    {
+        List<Tidslucka> visade = new List<Tidslucka>();
+
+        foreach (Tidslucka tid in tider)
+        {
+            if (tid.Start .Minute %15 == 0 && visade.Count< 12)
+            visade.Add(tid);
+        }
+            
+        if (visade.Count == 0)
+        {
+            for(int i = 0; i <tider.Count && i < 12; i++)
+            visade.Add(tider[i]);
+        }
+        
+        Console.WriteLine("\n Ledig tider :");
+        
+        for (int i = 0; i < visade.Count; i++)
+        {
+            Console.WriteLine($" {i + 1}. {visade[i].Start:HH:mm}");
+                    
+        }
+        Console.WriteLine("0. Avbryt");
+        
+        int val = KonsolHjälp.LäsHeltal("\nVal: ", 0, visade.Count);
+                    
+        if (val == 0)
+        {
+            return null;
+        }
+
+        return visade[val - 1];
+    }
+
+    public static void SkrivBokningar(List<Bokning> bokningar, bool visaPatient, string tomText)
+    {
+        Console.WriteLine();
+        if (bokningar.Count == 0)
+        {
+            Console.WriteLine(" " + tomText);
+            return;
+        }
+
+        foreach (Bokning bokning in bokningar)
+        {
+            Console.WriteLine("" + BokningsText(bokning,visaPatient));
+        }
+        
+    }
+
+
 }
