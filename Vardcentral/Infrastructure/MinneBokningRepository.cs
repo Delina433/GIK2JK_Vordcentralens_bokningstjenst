@@ -1,6 +1,6 @@
 using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
-using System.Data.Common;
+
 
 
 namespace Vardcentral.Infrastructure;
@@ -8,44 +8,37 @@ namespace Vardcentral.Infrastructure;
 
 public class MinneBokningRepository : IBokningsRepository
 {
-    private readonly List<Bokning> _bokningar = new();
+    private readonly Dictionary<int, Bokning> _bokningar = new();
 
     public void LäggTillBokning(Bokning bokning)
     {
         if (bokning == null)
         throw new ArgumentNullException(nameof(bokning));
     
-        _bokningar.Add(bokning);
+        _bokningar.Add(bokning.Id, bokning);
     }
 
+    //Ger null om id:t inte finns.
     public Bokning? HämtaBokning(int id)
     {
-        foreach (var bokning in _bokningar)
-        {
-            if (bokning.Id == id)
-                return bokning;
-        }
-        return null;
+        return _bokningar.TryGetValue(id, out Bokning? bokning) ? bokning : null;
     }
+
+    //Returerar en kopia som lista
     public List<Bokning> HämtaAllaBokningar()
     {
-        return new List<Bokning>(_bokningar);
+        return new List<Bokning>(_bokningar.Values);
 
     }
+
     public void UppdaderaBokning(Bokning bokning)
     {
         if(bokning == null)
         throw new ArgumentNullException(nameof(bokning));
         
-        for (int i = 0; i <_bokningar.Count; i++)
-        {
-            if (_bokningar[i].Id == bokning.Id)
-            {
-                _bokningar[i] = bokning;
-                return;
-            }
-        }
-
+        if (!_bokningar.ContainsKey(bokning.Id))
         throw new ArgumentException("Bokningen finns inte.");
+
+        _bokningar[bokning.Id] = bokning;
     }
 }

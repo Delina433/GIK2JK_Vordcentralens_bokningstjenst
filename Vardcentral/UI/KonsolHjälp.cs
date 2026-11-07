@@ -16,7 +16,7 @@ public class KonsolHjälp
     {
         while (true)
         {
-            Console.WriteLine(fråga);
+            Console.Write(fråga);
             string? text = Console.ReadLine();
 
             if (int.TryParse(text, out int tal)&& tal >= min && tal <= max)
@@ -92,7 +92,7 @@ public class KonsolHjälp
     public static string BokningsText(Bokning b, bool visaPatient)
     {
         string text = $"#{b.Id} {b.Tid.Start:yyyy-MM-dd HH:mm} {b.Typ.Namn}" +
-        $" {b.Personal.Namn} {b.Personal.Efternamn}, {b.Personal.Vårdcentral.Namn}" +
+        $" {b.Personal.Namn} {b.Personal.Efternamn}, {b.Personal.Vårdcentral.Namn}," +
         $"{b.Rum.Namn} [{b.Status}, {b.Prioritet}]";
 
         if (visaPatient)

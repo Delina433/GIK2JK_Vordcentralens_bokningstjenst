@@ -141,8 +141,8 @@ public class PatientMeny
         for(int i = 0; i < lediga.Count; i++)
         {
             Personal p = lediga[i].Personal;
-            Console.WriteLine($" {i + 1}. {p.Namn} {p.Efternamn} ({p.Typ},{p.Rum.Namn})," +
-                              $"första lediga tid{lediga[i].Tider[0].Start:HH:mm}");
+            Console.WriteLine($" {i + 1}. {p.Namn} {p.Efternamn} ({p.Typ},{p.Rum.Namn})," );//+
+                              //$"första lediga tid{lediga[i].Tider[0].Start:HH:mm}");
             
         }
        Console.WriteLine(" 0. Avbryt");
