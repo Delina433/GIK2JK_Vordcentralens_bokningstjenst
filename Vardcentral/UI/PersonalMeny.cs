@@ -47,7 +47,7 @@ public class PersonalMeny
                 case 4:
                     Avboka(vårdcentral);
                     break;
-                case 5:
+                case 0:
                     klar = true;
                     break;
             }

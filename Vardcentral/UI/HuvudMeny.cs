@@ -23,6 +23,7 @@ public class HuvudMeny
             for (int i = 0; i < _vårdcentraler.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {_vårdcentraler[i].Namn}");
+            }
                 Console.WriteLine("  0. Avsluta");
 
                 int nr = KonsolHjälp.LäsHeltal("Val:  : ", 0, _vårdcentraler.Count);
@@ -34,7 +35,10 @@ public class HuvudMeny
                 VäljRoll(_vårdcentraler[nr - 1]);
             }
         }
-    }
+    
+            
+        
+    
             private void VäljRoll(Vårdcentral vårdcentral)
     {
         while (true)

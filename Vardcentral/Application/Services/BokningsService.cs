@@ -179,13 +179,14 @@ public class BokningsService : IBokningsService
                 {
                     finnsRedan = true;
                 } 
+            }
                 if (!finnsRedan)
                 {
                     andra.Add(person.Vårdcentral);
                 }
             }              
             
-        }
+        
         return andra;
     }
 
@@ -207,7 +208,7 @@ public class BokningsService : IBokningsService
 
         _nästaId++;
         _bokningar.LäggTillBokning(bokning);
-        _notiser.Publicera(bokning, $"Bokad:{typ.Namn} hos{personal.Namn} {personal.Efternamn}, {tid.Start:yyyy-MM.dd HH:mm}, {personal.Rum:Namn}.");
+        _notiser.Publicera(bokning, $"Bokad: {typ.Namn} hos {personal.Namn} {personal.Efternamn}, {tid.Start:yyyy-MM-dd HH:mm}, {personal.Rum.Namn}.");
         
         return bokning;
     }
