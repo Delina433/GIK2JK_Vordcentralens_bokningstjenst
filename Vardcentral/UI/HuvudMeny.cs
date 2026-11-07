@@ -17,25 +17,30 @@ public class HuvudMeny
     }
     public void Kör()
     {
+        
         while (true)
         {
             KonsolHjälp.Rubrik("VÅRDCENTRALENS BOKNINGSTJÄNST");
+            Console.WriteLine("Välj vårdcentral: ");
+
             for (int i = 0; i < _vårdcentraler.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {_vårdcentraler[i].Namn}");
-                Console.WriteLine("  0. Avsluta");
-
-                int nr = KonsolHjälp.LäsHeltal("Val:  : ", 0, _vårdcentraler.Count);
-                if (nr == 0)
-                {
-                    Console.WriteLine("Avslutar programmet.");
-                    return;
-                }
-                VäljRoll(_vårdcentraler[nr - 1]);
             }
+                
+            Console.WriteLine(" 0. Avsluta");
+
+            int nr = KonsolHjälp.LäsHeltal(" Val: : ", 0, _vårdcentraler.Count);
+            if (nr == 0)
+            {
+                Console.WriteLine("Avslutar programmet.");
+                return;
+            }
+            VäljRoll(_vårdcentraler[nr - 1]);
+            
         }
     }
-            private void VäljRoll(Vårdcentral vårdcentral)
+    private void VäljRoll(Vårdcentral vårdcentral)
     {
         while (true)
         {

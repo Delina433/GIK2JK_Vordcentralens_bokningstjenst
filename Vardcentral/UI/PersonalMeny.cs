@@ -47,7 +47,7 @@ public class PersonalMeny
                 case 4:
                     Avboka(vårdcentral);
                     break;
-                case 5:
+                case 0:
                     klar = true;
                     break;
             }
@@ -73,7 +73,7 @@ public class PersonalMeny
         }
     
 
-        private void VisaAktiva(Vårdcentral vårdcentral)
+    private void VisaAktiva(Vårdcentral vårdcentral)
     {
         List<Bokning> aktiva = AktivaHär(vårdcentral);
         
@@ -89,7 +89,7 @@ public class PersonalMeny
                 Console.WriteLine("  " + KonsolHjälp.BokningsText(bokning, true));
             }
     }
-            private void AkutBedömning(Vårdcentral vårdcentral)
+    private void AkutBedömning(Vårdcentral vårdcentral)
     {
         KonsolHjälp.Rubrik("AKUT BEDÖMNING");
         Console.WriteLine(" 1. Röd - Livshotande, ambulans direkt");
@@ -138,10 +138,9 @@ public class PersonalMeny
         if (bokning.Personal.Vårdcentral.Id != vårdcentral.Id)
         {
             Console.WriteLine($"\n  Ingen tid på {vårdcentral.Namn}. Patienten skickas till {bokning.Personal.Vårdcentral.Namn}.");
-            Console.WriteLine($"\n  Gul Tid bokad : " + KonsolHjälp.BokningsText(bokning, true));
-
-
         }
+        Console.WriteLine($"\n  Gul Tid bokad : " + KonsolHjälp.BokningsText(bokning, true));
+
     }
     private void StällIn(Vårdcentral vårdcentral)
     {
