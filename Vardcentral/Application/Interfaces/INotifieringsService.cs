@@ -12,4 +12,7 @@ public interface INotifieringsService
 
     //Publicerar ett meddelande när något ändras
     void Publicera(Bokning bokning, string meddelande);
+
+    //Hämta alla notiser som skickas till en patient
+    List<string> HämtaNotiser(string personnummer);
 }

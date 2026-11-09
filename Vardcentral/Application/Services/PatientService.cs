@@ -8,10 +8,13 @@ public class PatientService : IPatientService
     private readonly IBokningsService _bokningar;
     private readonly IPatientRepository _patienter;
 
-    public PatientService(IBokningsService bokningar, IPatientRepository patienter) 
+    private readonly INotifieringsService _notiser;
+
+    public PatientService(IBokningsService bokningar, IPatientRepository patienter,INotifieringsService notiser) 
     {
         _bokningar = bokningar;
         _patienter = patienter;
+        _notiser = notiser;
     }
 
     public Patient? HämtaPatient(string personnummer)
@@ -43,6 +46,11 @@ public class PatientService : IPatientService
     public List<Bokning> HämtaBokningar(string personnummer)
     {
         return _bokningar.HämtaBokningar(personnummer);
+    }
+
+    public List<string> HämtaNotiser(string personnummer)
+    {
+        return _notiser.HämtaNotiser(personnummer);
     }
 }
  

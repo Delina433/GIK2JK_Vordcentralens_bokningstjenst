@@ -1,6 +1,7 @@
 using Vardcentral.Domain;
 using Vardcentral.Domain.Enums;
 using Vardcentral.Application.Interfaces;
+using System.ComponentModel;
 // Tar emot anrop från menyn och styr de andra klasserna.
 
 namespace Vardcentral.Application.Services;
@@ -31,13 +32,14 @@ public class BokningsService : IBokningsService
     // Gul: tidigast lediga tid i dag på vald vårdcentral.
     public Bokning? BokaAkut(Besöktyp akutTyp, Vårdcentral vårdcentral, DateTime dag, Patient patient)
     {
+        //Ledig tid på vald vårdcentral
         Bokning? bokning = BokaTidigast(akutTyp, vårdcentral, dag, patient);
         if (bokning != null)
         {
             return bokning;
         }
      
-
+        //Ledig tid på den andra vårdcentralen
         foreach ( Vårdcentral annan in HämtaAndraVårdcentraler(vårdcentral))
         {
             bokning = BokaTidigast(akutTyp, annan, dag, patient);
@@ -49,6 +51,15 @@ public class BokningsService : IBokningsService
 
         }
         
+        bokning = TaÖverGrönTid(akutTyp, vårdcentral, dag, patient);
+        if (bokning !=null) return bokning;
+
+        foreach(Vårdcentral annan in HämtaAndraVårdcentraler(vårdcentral))
+        {
+            bokning = TaÖverGrönTid(akutTyp, annan, dag, patient);
+            if (bokning !=null) return bokning;
+        }
+
         return null;
             
         
@@ -81,13 +92,24 @@ public class BokningsService : IBokningsService
             return false;
         }
         
-
+        List<Personal> kandidater = new List<Personal>();
         foreach (var person in _personal.HämtaAlla())
         {
             if (person.Typ !=bokning.Personal.Typ) continue;
+            if (person.Id == bokning.Personal.Id) continue;
 
-            if (person.Vårdcentral.Id == bokning.Personal.Vårdcentral.Id)continue;
+            if (person.Vårdcentral.Id == bokning.Personal.Vårdcentral.Id) 
+            {
+                kandidater.Insert(0, person);
+            }
+            else
+            {
+                kandidater.Add(person);
+            }
+        }
 
+        foreach(var person in kandidater)
+        {
             if (_tidsSökare.ÄrTillgänglig(person, person.Rum, bokning.Tid))
             {
                 bokning.Omboka(person,bokning.Tid);
@@ -98,6 +120,8 @@ public class BokningsService : IBokningsService
                 return true;
             }
         }
+
+            
 
         //Ingen ersätare hittades
         bokning.StällIn();
@@ -163,6 +187,32 @@ public class BokningsService : IBokningsService
         return Skapa(akutTyp, bästa.Personal, bästa.Tider[0], patient, BokningsPrioritet.Gul); 
 
     }
+    private Bokning? TaÖverGrönTid(Besöktyp akutTyp, Vårdcentral vårdcentral, DateTime dag, Patient patient)
+    {
+        Bokning? grön = null;
+
+        foreach (Bokning b in _bokningar.HämtaAllaBokningar())
+        {
+            if (!b.ÄrAktiv) continue;
+            if(b.Prioritet != BokningsPrioritet.Grön) continue; // Gul tar aldrig över gul
+            if(b.Personal.Typ != akutTyp.KrävdPersonal) continue; 
+            if (b.Personal.Vårdcentral.Id != vårdcentral.Id) continue;
+            if(b.Tid.Start.Date !=dag.Date || b.Tid.Start <= DateTime.Now) continue;
+
+            if (grön == null || b.Tid.Start < grön.Tid.Start)
+            {
+                grön = b;
+            }
+        }
+        if (grön == null) return null;
+        //Släpp den gröna tiden först, annars säger TidsSökare att tiden är upptagen.
+        grön.StällIn();
+        _bokningar.UppdaderaBokning(grön);
+        _notiser.Publicera(grön, $"Din tid {grön.Tid.Start:yyyy-MM-dd HH:mm} har fått ge plats åt ett akut besök. Boka ärna en ny tid.");
+
+        //Gul tar över just den gröna tidsluckan
+        return Skapa(akutTyp, grön.Personal, grön.Tid, patient, BokningsPrioritet.Gul);
+    }
 
     private List<Vårdcentral>HämtaAndraVårdcentraler(Vårdcentral nuvarande)
     {
@@ -208,7 +258,7 @@ public class BokningsService : IBokningsService
 
         _nästaId++;
         _bokningar.LäggTillBokning(bokning);
-        _notiser.Publicera(bokning, $"Bokad:{typ.Namn} hos{personal.Namn} {personal.Efternamn}, {tid.Start:yyyy-MM-dd HH:mm}, {personal.Rum:Namn}.");
+        _notiser.Publicera(bokning, $"Bokad: {typ.Namn} hos {personal.Namn} {personal.Efternamn}, {tid.Start:yyyy-MM-dd HH:mm}, {personal.Rum.Namn}, {personal.Vårdcentral.Namn}.");
         
         return bokning;
     }

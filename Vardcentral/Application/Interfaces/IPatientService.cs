@@ -19,5 +19,6 @@ public interface IPatientService
     bool Avboka(int bokningId);
 
     List<Bokning> HämtaBokningar(string personnummer);
+    List<string> HämtaNotiser(string personnummer);
 
 }

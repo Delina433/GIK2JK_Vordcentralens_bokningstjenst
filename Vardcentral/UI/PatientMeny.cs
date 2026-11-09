@@ -21,27 +21,32 @@ public class PatientMeny
         while (!klar)
         {
             KonsolHjälp.Rubrik(vårdcentral.Namn+ ": patient");
+            Console.WriteLine("\n Behöver du akut hjälp? Kontakta personalen. Vid livsfara: ring 112.");
+            Console.WriteLine();
             Console.WriteLine(" 1. Boka besök ");
             Console.WriteLine(" 2. Visa mina bokningar");
-            Console.WriteLine(" 3.Avboka min bokning ");
-            Console.WriteLine(" 0.Tillbaka");
+            Console.WriteLine(" 3. Avboka min bokning ");
+            Console.WriteLine(" 4. Mina notiser");
+            Console.WriteLine(" 0. Tillbaka");
 
-            int val = KonsolHjälp.LäsHeltal("\n Val: ",0,3);
+            int val = KonsolHjälp.LäsHeltal("\n Val: ",0,4);
 
             switch (val)
             {
                 case 1: BokaTid(vårdcentral); break;
                 case 2: VisaBokningar(); break;
                 case 3: Avboka();break;
+                case 4: VisaNotiser(); break;
                 case 0: klar= true; break;
             }
         }
     }
+   
        //-------Boka tider---------
     private void BokaTid(Vårdcentral vårdcentral)
     {
         // 1.Nya patienter registreras här.
-        Patient? patient = HittaEllerRegistrera();
+        Patient? patient = HittaBefintligPatient();
         if (patient == null) return;
 
         //2. Vilket besök
@@ -57,7 +62,7 @@ public class PatientMeny
 
         if (lediga.Count == 0)
         {
-            Console.WriteLine($"\n Inga lediga tider hos {vårdcentral.Namn} den {dag:yyyy-MM-dd}.");
+            Console.WriteLine($"\n Inga lediga tider hos {vårdcentral.Namn} den {dag:yyyy-MM-dd} (öppet vardagar 08-17).");
             VisaAndraVårdcentraler(typ, vårdcentral,dag);
             return;
         }
@@ -112,7 +117,7 @@ public class PatientMeny
         string förnamn = KonsolHjälp.LäsNamn("Förenamn: ");
         string efternamn = KonsolHjälp.LäsNamn("Efternamn: ");
 
-         Patient ny = _tjänst.RegistreraPatient(förnamn, efternamn, personnummer);
+        Patient ny = _tjänst.RegistreraPatient(förnamn, efternamn, personnummer);
         Console.WriteLine($"Välkommen {ny.Namn} {ny.Efternamn}! Du är nu registrerad.");
         return ny;
     }
@@ -229,7 +234,24 @@ public class PatientMeny
                                 "Boka en tid först för att registrera dig.");
         }
         return patient;
-    }  
+    } 
+
+     private void VisaNotiser()
+    {
+        Patient? patient = HittaBefintligPatient(); //frågar om personnummer
+        if (patient == null) return;
+
+        List<string> notiser = _tjänst.HämtaNotiser(patient.Personnummer);
+        Console.WriteLine();
+        if (notiser.Count == 0)
+        {
+            Console.WriteLine("Du har inga notiser."); return;
+        }
+        foreach(string notis in notiser)
+        {
+            Console.WriteLine("-"+ notis);
+        }
+    } 
 
 }
 
