@@ -1,7 +1,7 @@
 ﻿using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
 namespace Vardcentral.Application.Strategier;
-// sorterar bokningar efter tid .Tidigaste tiden kommer först.
+// Sratgey:bara tid, tidigast tid först.
 public class TidsordningsRegeln : IPrioritetStrategi
 
 {

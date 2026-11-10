@@ -1,10 +1,10 @@
 using Vardcentral.Domain;
 
 namespace Vardcentral.Application.Interfaces;
-// Den som vill få notiser
+//  Observer: den som vill få notiser när en bokning ändras. (Observer mönster)
 public interface IBokningsObserver
 {
-    //Den anropas när bokning ändringen publiceras
-    //Den tar emot bokningen och meddelandet som skickas från NotifieringsService
+    // Anropas av NotifieringsService när en bokning ändras.
+    //  Den skickar meddelandet vidare till alla som prenumererar på notiser.
     void Uppdatera(Bokning bokning, string meddelande);
 }

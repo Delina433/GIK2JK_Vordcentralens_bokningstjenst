@@ -2,10 +2,10 @@ using Vardcentral.Domain;
 
 namespace Vardcentral.Application. Interfaces;
 
-// Hämtar personal
+//  Repository: Hämtar personal
 public interface IPersonalRepository
 {
-    // Hämtar en vårdpersonal med id
+    // null om id inte finns
     Personal? Hämta(string id); // Returerar null om id inte finns 
  // Hämtar all personal.     
     List<Personal> HämtaAlla();

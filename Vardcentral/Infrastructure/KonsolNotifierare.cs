@@ -2,7 +2,7 @@ using Vardcentral.Domain;
 using Vardcentral.Application.Interfaces;
 
 
-
+// Observer: skriver ut notisen i konsolen.
 public class KonsolNotifierare : IBokningsObserver
 {
     public void Uppdatera(Bokning bokning, string meddelande)

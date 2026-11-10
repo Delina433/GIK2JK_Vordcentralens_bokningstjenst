@@ -5,11 +5,10 @@ namespace Vardcentral.Application.Interfaces;
 // Hittar lediga tider och kontrollerar om en tid är ledig
 public interface ITidsSökare
 {
-    //Söker efter lediga tider för en viss typ av vårdbesök.
-    //Returerar en lista med lediga tidsluckor för varje vårdpersonal.
+    //Lediga tider per personal för en besökstyp på en viss dag. 
+    
     List<LedigaTider> SökLedigaTider(Besöktyp typ, Vårdcentral vårdcentral, DateTime dag);
      
-     //Kontrolerar om vårdpersonal och rum är lediga under den angivna tidsluckan.
-     //Returerar true om tiden är ledig
+     //True om båda personal och rum är lediga under hela tidsluckan. False annars.
     bool ÄrTillgänglig(Personal personal, Rum rum, Tidslucka tid);
 }

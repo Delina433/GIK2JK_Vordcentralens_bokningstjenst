@@ -4,17 +4,17 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Vardcentral.Infrastructure;
 
-// sparar patienter i minnet.
+// sparar patienter i minnet.Dictionery: personnummer--> patient
 public class MinnePatientRepository : IPatientRepository
-{      // personnummer--> patient
+{      
     private readonly Dictionary<string, Patient> _Patienter = new Dictionary<string, Patient>();
-    // lägger till en patient
+    // Sparar en patient
     public void LäggTill(Patient patient)
     {
         _Patienter[patient.Personnummer] = patient;
 
     }
-    // Hämtar patient , eller null om den inte finns
+    // Hämtar patienten , eller null om den inte finns
     public Patient? Hämta(string personnummer)
     {
 

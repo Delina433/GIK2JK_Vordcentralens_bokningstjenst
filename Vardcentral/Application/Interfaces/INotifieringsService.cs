@@ -1,18 +1,18 @@
 using Vardcentral.Domain;
 
 namespace Vardcentral.Application.Interfaces;
-// Skickar ut meddelanden när en bokning ändras
+// Skickar ut notiser när en bokning ändras. (Observer mönster)
 public interface INotifieringsService
 {
-    //Registrerar en obseervatör som ska får info 
+    //börja få notiser.
     void Prenumerera(IBokningsObserver observer);
 
-    //Tar bort en observatör så att den inte får info
+    //sluta få notiser.
     void Avprenumerera(IBokningsObserver observer);
 
-    //Publicerar ett meddelande när något ändras
+    //skicka notis till alla.
     void Publicera(Bokning bokning, string meddelande);
 
-    //Hämta alla notiser som skickas till en patient
+    //en patient sparade notiser. Hämtar alla sparade notiser för en patient.
     List<string> HämtaNotiser(string personnummer);
 }
