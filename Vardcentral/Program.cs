@@ -35,12 +35,12 @@ personalRepo.LäggTill(new Personal("Adem", "Johansson", Personaltyp.Fysioterape
 personalRepo.LäggTill(new Personal("Rena", "Larsson", Personaltyp.Fysioterapeut, "100006", norr, rumNorr5));
 
 //Vårdcentral söder
-personalRepo.LäggTill(new Personal("Karin", "Olsson", Personaltyp.Läkare, "200001", söder, rumSöder1));
-personalRepo.LäggTill(new Personal("Lena", "Lassis", Personaltyp.Läkare, "200002", söder, rumSöder2));
-personalRepo.LäggTill(new Personal("Eva", "Svensson", Personaltyp.Sjuksköterska, "200003", söder, rumSöder3));
-personalRepo.LäggTill(new Personal("Fredrik", "Persson", Personaltyp.Sjuksköterska, "200004", söder, rumSöder4));
-personalRepo.LäggTill(new Personal("Nour", "Gustafsson", Personaltyp.Fysioterapeut, "200005", söder, rumSöder5));
-personalRepo.LäggTill(new Personal("Aya", "Skog", Personaltyp.Fysioterapeut, "200006", söder, rumSöder5));
+personalRepo.LäggTill(new Personal("Karin", "Olsson", Personaltyp.Läkare, "200007", söder, rumSöder1));
+personalRepo.LäggTill(new Personal("Lena", "Lassis", Personaltyp.Läkare, "200008", söder, rumSöder2));
+personalRepo.LäggTill(new Personal("Eva", "Svensson", Personaltyp.Sjuksköterska, "200009", söder, rumSöder3));
+personalRepo.LäggTill(new Personal("Fredrik", "Persson", Personaltyp.Sjuksköterska, "200010", söder, rumSöder4));
+personalRepo.LäggTill(new Personal("Nour", "Gustafsson", Personaltyp.Fysioterapeut, "200011", söder, rumSöder5));
+personalRepo.LäggTill(new Personal("Aya", "Skog", Personaltyp.Fysioterapeut, "200012", söder, rumSöder5));
 
 // Våra antagnaden:fasta längder.
 var besökstyper = new List<Besöktyp>
@@ -53,9 +53,9 @@ var akutTyp = new Besöktyp("Akut", 30, Personaltyp.Sjuksköterska);// personale
 
 // Påhittade patienter.
 var patienteRepo = new MinnePatientRepository();
-patienteRepo.LäggTill(new Patient("Elin", "Isaksson", "9001011234"));
-patienteRepo.LäggTill(new Patient("Kalle", "Persson", "9002021234"));
-patienteRepo.LäggTill(new Patient("Rin", "Brun", "9003031234"));
+patienteRepo.LäggTill(new Patient("Elin", "Isaksson", "1111111111"));
+patienteRepo.LäggTill(new Patient("Kalle", "Persson", "2222222222"));
+patienteRepo.LäggTill(new Patient("Rin", "Brun", "3333333333"));
 
 // koppla ihop klasserna//
 var bokningRepo = new MinneBokningRepository();

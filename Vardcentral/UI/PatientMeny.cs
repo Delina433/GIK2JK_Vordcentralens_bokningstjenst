@@ -46,7 +46,7 @@ public class PatientMeny
     private void BokaTid(Vårdcentral vårdcentral)
     {
         // 1.Nya patienter registreras här.
-        Patient? patient = HittaBefintligPatient();
+        Patient? patient = HittaEllerRegistrera();
         if (patient == null) return;
 
         //2. Vilket besök
@@ -105,8 +105,9 @@ public class PatientMeny
         }
 
         //personnummer finns inte patienten är ny, eller så skriver hen fel.
-
-        Console.WriteLine($"Vi hittar ingen personnummer{personnummer}.");
+        Console.WriteLine();
+        Console.WriteLine($"Vi hittar inget personnummer: {personnummer}.");
+        Console.WriteLine();
         Console.WriteLine(" 1. Jag är ny, jag vill registrera mig");
         Console.WriteLine(" 0. Avbryt");
 
@@ -114,7 +115,7 @@ public class PatientMeny
          if(val ==0) return null;
         
     
-        string förnamn = KonsolHjälp.LäsNamn("Förenamn: ");
+        string förnamn = KonsolHjälp.LäsNamn("Förnamn: ");
         string efternamn = KonsolHjälp.LäsNamn("Efternamn: ");
 
         Patient ny = _tjänst.RegistreraPatient(förnamn, efternamn, personnummer);
