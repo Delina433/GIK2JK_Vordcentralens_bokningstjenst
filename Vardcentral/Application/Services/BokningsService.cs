@@ -2,6 +2,7 @@ using Vardcentral.Domain;
 using Vardcentral.Domain.Enums;
 using Vardcentral.Application.Interfaces;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 // Tar emot anrop från menyn och styr de andra klasserna.
 
 namespace Vardcentral.Application.Services;
@@ -15,6 +16,8 @@ public class BokningsService : IBokningsService
     private readonly IPrioritetStrategi _prioritet;
 
     private int _nästaId = 1; // räknare för bokningar
+    //hur långt fram systemet letar ny tid vis instäldbesök
+    private const int SökDagarFramåt = 14; 
 
     public BokningsService(IBokningsRepository bokningar, IPersonalRepository personal,  ITidsSökare tidsSökare, INotifieringsService notiser, IPrioritetStrategi prioritet)
     {
@@ -91,47 +94,49 @@ public class BokningsService : IBokningsService
         {
             return false;
         }
+
+        DateTime gammalTid = bokning.Tid.Start;
         
-        List<Personal> kandidater = new List<Personal>();
-        foreach (var person in _personal.HämtaAlla())
-        {
-            if (person.Typ !=bokning.Personal.Typ) continue;
-            if (person.Id == bokning.Personal.Id) continue;
+        List<Vårdcentral> vårdcentraler = new List<Vårdcentral>{bokning.Personal.Vårdcentral};
+        vårdcentraler.AddRange(HämtaAndraVårdcentraler(bokning.Personal.Vårdcentral));
 
-            if (person.Vårdcentral.Id == bokning.Personal.Vårdcentral.Id) 
-            {
-                kandidater.Insert(0, person);
-            }
-            else
-            {
-                kandidater.Add(person);
-            }
-        }
-
-        foreach(var person in kandidater)
+        
+        for (int i = 0; i<= SökDagarFramåt; i++)
         {
-            if (_tidsSökare.ÄrTillgänglig(person, person.Rum, bokning.Tid))
-            {
-                bokning.Omboka(person,bokning.Tid);
-                _bokningar.UppdaderaBokning(bokning);
-                _notiser.Publicera(bokning, 
-                $"Din tid är flyttad till {person.Namn} {person.Efternamn} på {person.Vårdcentral.Namn}, samma tid.");
+            DateTime dag = gammalTid.Date.AddDays(i);
                 
-                return true;
+            foreach(Vårdcentral vc in vårdcentraler)
+            {
+                foreach(LedigaTider lediga in _tidsSökare.SökLedigaTider(bokning.Typ, vc, dag))
+                {
+                    //Inte samma personal (t.ex. om hen är sjuk)
+                    if(lediga.Personal.Id == bokning.Personal.Id) continue;
+
+                    //Förstq lediga tid efter den inställda tiden
+                    Tidslucka? nyTid = lediga.Tider.FirstOrDefault(t => t.Start> gammalTid);
+                    if(nyTid == null) continue;
+
+                    Personal nyPersonal = lediga.Personal;
+                    bokning.Omboka(nyPersonal,nyTid);
+                    _bokningar.UppdaderaBokning(bokning);
+                    _notiser.Publicera(bokning,$"Din tid {gammalTid:yyyy-MM-dd HH:mm} är inställd. Ny tid: {nyTid.Start:yyyy-MM-dd HH:mm} " +
+                        $"hos {nyPersonal.Namn} {nyPersonal.Efternamn}, {nyPersonal.Rum.Namn}, {nyPersonal.Vårdcentral.Namn}. " +
+                        "Avboka om tiden inte passar.");
+                    return true;
+                }
+            
             }
+
+               
         }
 
-            
-
-        //Ingen ersätare hittades
+        //Ingen ledig tid inom 14 dagar
         bokning.StällIn();
-
         _bokningar.UppdaderaBokning(bokning);
         _notiser.Publicera(bokning, "Din tid är tyvärr inställd. Boka gärna en ny tid.");
         
         return true;
     }
-
     public List<Bokning> HämtaBokningar(string personnummer)
     {
         List<Bokning> resultat = new List<Bokning>();
