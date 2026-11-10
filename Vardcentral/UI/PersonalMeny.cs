@@ -29,10 +29,10 @@ public class PersonalMeny
         bool klar = false;
         while (!klar)
         {
-            KonsolHjälp.Rubrik(vårdcentral.Namn + " : bokningspersonal");
+            KonsolHjälp.Rubrik(vårdcentral.Namn + " : Bokningspersonal");
             Console.WriteLine("  1. Visa alla aktiva bokningar (mest brådskande först)");
             Console.WriteLine("  2. Akut bedömning ");
-            Console.WriteLine("  3. Ställa in ett besök)");
+            Console.WriteLine("  3. Ställa in ett besök");
             Console.WriteLine("  4. Avboka en patients bokning");
             Console.WriteLine("  0. Tillbaka");
 

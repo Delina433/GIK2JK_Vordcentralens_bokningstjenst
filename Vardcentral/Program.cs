@@ -53,9 +53,9 @@ var akutTyp = new Besöktyp("Akut", 30, Personaltyp.Sjuksköterska);// personale
 
 // Påhittade patienter.
 var patienteRepo = new MinnePatientRepository();
-patienteRepo.LäggTill(new Patient("Elin", "Isaksson", "9001011234"));
-patienteRepo.LäggTill(new Patient("Kalle", "Persson", "9002021234"));
-patienteRepo.LäggTill(new Patient("Rin", "Brun", "9003031234"));
+patienteRepo.LäggTill(new Patient("Elin", "Isaksson", "1111111111"));
+patienteRepo.LäggTill(new Patient("Kalle", "Persson", "2222222222"));
+patienteRepo.LäggTill(new Patient("Rin", "Brun", "3333333333"));
 
 // koppla ihop klasserna//
 var bokningRepo = new MinneBokningRepository();

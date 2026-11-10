@@ -105,8 +105,9 @@ public class PatientMeny
         }
 
         //personnummer finns inte patienten är ny, eller så skriver hen fel.
-
-        Console.WriteLine($"Vi hittar inget personnummer{personnummer}.");
+        Console.WriteLine();
+        Console.WriteLine($"Vi hittar inget personnummer: {personnummer}.");
+        Console.WriteLine();
         Console.WriteLine(" 1. Jag är ny, jag vill registrera mig");
         Console.WriteLine(" 0. Avbryt");
 
