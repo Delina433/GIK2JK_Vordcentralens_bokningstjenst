@@ -3,7 +3,7 @@ using Vardcentral.Domain;
 
 namespace Vardcentral.Application.Interfaces;
 
-// ALLT en patient får göra. PatientMeny partar bara med det här interfacet
+// ALLT en patient får göra. PatientMeny prtar bara med det här interfacet
 public interface IPatientService
 {
     
