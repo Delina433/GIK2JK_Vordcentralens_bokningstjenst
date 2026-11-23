@@ -14,14 +14,14 @@ var Vårdcentraler = new List<Vårdcentral> { norr, söder };
 // Rum kan delas av flera 
 var rumNorr1 = new Rum(1, "Rum 1 (Norr)");
 var rumNorr2 = new Rum(2, "Rum 2 (Norr)");
-var rumNorr3 = new Rum(2, "Rum 3 (Norr)");
-var rumNorr4 = new Rum(2, "Rum 4 (Norr)");
-var rumNorr5 = new Rum(2, "Rum 5 (Norr)");
-var rumSöder1 = new Rum(3, "Rum 1 ( Söder)");
-var rumSöder2 = new Rum(4, "Rum 2 ( Söder)");
-var rumSöder3 = new Rum(4, "Rum 3 ( Söder)");
-var rumSöder4 = new Rum(4, "Rum 4 ( Söder)");
-var rumSöder5 = new Rum(4, "Rum 5 ( Söder)");
+var rumNorr3 = new Rum(3, "Rum 3 (Norr)");
+var rumNorr4 = new Rum(4, "Rum 4 (Norr)");
+var rumNorr5 = new Rum(5, "Rum 5 (Norr)");
+var rumSöder1 = new Rum(6, "Rum 1 ( Söder)");
+var rumSöder2 = new Rum(7, "Rum 2 ( Söder)");
+var rumSöder3 = new Rum(8, "Rum 3 ( Söder)");
+var rumSöder4 = new Rum(9, "Rum 4 ( Söder)");
+var rumSöder5 = new Rum(10, "Rum 5 ( Söder)");
 
 
 

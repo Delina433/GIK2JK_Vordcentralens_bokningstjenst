@@ -74,7 +74,7 @@ public class BokningsService : IBokningsService
             
         
     }
-    //Avboka en bokning med hjälp av boknings ID(Peronnummmer)
+    //Avboka en bokning med hjälp av boknings-id
     public bool Avboka(int bokningsId)
     {
         //Hämta bokningen från listan 
