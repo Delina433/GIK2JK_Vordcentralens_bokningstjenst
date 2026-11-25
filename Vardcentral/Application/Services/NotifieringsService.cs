@@ -40,20 +40,20 @@ public class NotifieringsService : INotifieringsService
     /// meddelandet till samtliga prenumererande observatörer.
     public void Publicera (Bokning bokning, string meddelande)
     {   
-         // Kontrollerar om patienten redan har en lista med sparade notiser.
+         /// Kontrollerar om patienten redan har en lista med sparade notiser.
         if(!_sparadeNotiser.ContainsKey(pnr))
         
-        {    // Skapar en ny tom lista om patienten inte har några sparade notiser.
+        {    /// Skapar en ny tom lista om patienten inte har några sparade notiser.
             _sparadeNotiser[pnr]= new List<string>();
         }
         
-         // Sparar meddelandet tillsammans med datum och tid.
+         /// Sparar meddelandet tillsammans med datum och tid.
         _sparadeNotiser[pnr].Add($"{DateTime.Now:yyy-MM-dd HH:mm} {meddelande}");
 
-        // Går igenom alla observatörer som har prenumererat.
+        /// Går igenom alla observatörer som har prenumererat.
         foreach (IBokningsObserver observer in _observatörer)
         {                 
-            // Meddelar varje observatör om bokningshändelsen.
+            /// Meddelar varje observatör om bokningshändelsen.
             observer.Uppdatera(bokning, meddelande);
         }
     }
@@ -63,13 +63,13 @@ public class NotifieringsService : INotifieringsService
     /// listan inte kan ändras utifrån.
     public List<string> HämtaNotiser(string personnumer)
     {  
-    // Försöker hämta patientens notiser med personnumret som nyckel.
+    /// Försöker hämta patientens notiser med personnumret som nyckel.
         if(_sparadeNotiser.TryGetValue(personnumer, out List<string>? lista))
         {
-         // Returnerar en kopia så att originalet inte kan ändras utifrån.
-            return new List<string>(lista); //Kopia, så ingen utanför kan ändra listan
+         /// Returnerar en kopia så att originalet inte kan ändras utifrån.
+            return new List<string>(lista); ///Kopia, så ingen utanför kan ändra listan
         }
-        // Om patienten inte finns i Dictionary returneras en tom lista.
+        /// Om patienten inte finns i Dictionary returneras en tom lista.
         return new List<string>();
     }
 
