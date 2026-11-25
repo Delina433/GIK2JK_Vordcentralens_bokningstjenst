@@ -26,7 +26,7 @@ var rumSöder5 = new Rum(10, "Rum 5 ( Söder)");
 
 
 var personalRepo = new MinnePersonalRepository();
-//Vårdcentral
+//Vårdcentral norr
 personalRepo.LäggTill(new Personal("Ahmad", "Ali", Personaltyp.Läkare, "100001", norr, rumNorr1));
 personalRepo.LäggTill(new Personal("Anna", "Andersson", Personaltyp.Läkare, "100002", norr, rumNorr2));
 personalRepo.LäggTill(new Personal("Sarra", "Berg", Personaltyp.Sjuksköterska, "100003", norr, rumNorr3));

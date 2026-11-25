@@ -40,6 +40,9 @@ public class NotifieringsService : INotifieringsService
     /// meddelandet till samtliga prenumererande observatörer.
     public void Publicera (Bokning bokning, string meddelande)
     {   
+        //Hämtar patientens personnummer, används som nyckel
+        string pnr = bokning.Patient.Personnummer;
+
          /// Kontrollerar om patienten redan har en lista med sparade notiser.
         if(!_sparadeNotiser.ContainsKey(pnr))
         

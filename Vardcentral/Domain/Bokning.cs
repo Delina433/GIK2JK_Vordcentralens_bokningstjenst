@@ -22,7 +22,8 @@ public class Bokning
    // En bokning är aktiv om en är bokad eller ombokad (inte avkodad eller inställd)
     public bool ÄrAktiv
     {
-        get {return Status == BokningsStatus.Bokad || Status == BokningsStatus.Ombokad; }
+        get {return Status == BokningsStatus.Bokad 
+        || Status == BokningsStatus.Ombokad; }
     }
 
     public Bokning(int id, Patient patient, Personal personal, Besöktyp typ, Tidslucka tid, BokningsPrioritet prioritet)
