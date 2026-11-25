@@ -34,9 +34,9 @@ public class NotifieringsService : INotifieringsService
             _sparadeNotiser[pnr]= new List<string>();
         }
 
-        _sparadeNotiser[pnr].Add($"{DateTime.Now:yyy-MM-dd HH:mm} {meddelande}");
+        _sparadeNotiser[pnr].Add($"{DateTime.Now:yyyy-MM-dd HH:mm} {meddelande}");
 
-        //Skickar till alla obsörvatörer
+        //Skickar till alla observatörer
         foreach (IBokningsObserver observer in _observatörer)
         {
             observer.Uppdatera(bokning, meddelande);
