@@ -5,7 +5,6 @@ using Vardcentral.Application.Interfaces;
 namespace Vardcentral.Application.Strategier;
 //strategy:Röd Först, sedan gul ,sedan grön. Om samma prioritet, tidigast tid först.
 public class AkutFörstRegel : IPrioritetStrategi
-
 {
     public int Jämför(Bokning a, Bokning b)
     {

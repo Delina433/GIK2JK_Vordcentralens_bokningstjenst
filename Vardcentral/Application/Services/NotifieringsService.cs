@@ -48,7 +48,7 @@ public class NotifieringsService : INotifieringsService
         }
         
          /// Sparar meddelandet tillsammans med datum och tid.
-        _sparadeNotiser[pnr].Add($"{DateTime.Now:yyy-MM-dd HH:mm} {meddelande}");
+        _sparadeNotiser[pnr].Add($"{DateTime.Now:yyyy-MM-dd HH:mm} {meddelande}");
 
         /// Går igenom alla observatörer som har prenumererat.
         foreach (IBokningsObserver observer in _observatörer)
