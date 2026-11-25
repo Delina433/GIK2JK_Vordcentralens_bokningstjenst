@@ -58,6 +58,12 @@ public class PersonalMeny
                     break;
             }
 
+            if (!klar)
+            {
+                Console.Write("\n Tryck Enter för att fortsätta...");
+                Console.ReadLine();
+            }
+
         }
 
     }
