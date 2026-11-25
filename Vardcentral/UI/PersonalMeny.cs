@@ -76,6 +76,13 @@ public class PersonalMeny
                     klar = true;
                     break;
             }
+
+            if (!klar)
+            {
+                Console.Write("\n Tryck Enter för att fortsätta...");
+                Console.ReadLine();
+            }
+
         }
     }
 
