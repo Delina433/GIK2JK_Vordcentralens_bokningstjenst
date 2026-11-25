@@ -19,9 +19,16 @@ public class AkutBedömare
     };
 
     public BokningsPrioritet Bedöm(List<bool>rödaSvar, List<bool> gulaSvar)
-    {
+    {    // Kontrollerar om minst ett av svaren på de röda frågorna är true.
+        // Om ja returneras prioriteten Röd direkt.
         if(rödaSvar.Contains(true)) return BokningsPrioritet.Röd;
+        
+        // Kontrollerar om minst ett av svaren på de gula frågorna är true.
+        // Om ja returneras prioriteten Gul.
         if(gulaSvar.Contains(true)) return BokningsPrioritet.Gul;
+        
+         // Om inga svar är true på de röda eller gula frågorna
+        // returneras prioriteten Grön.
         return BokningsPrioritet.Grön;
         
 
